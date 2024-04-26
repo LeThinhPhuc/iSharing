@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "615193013828",
+    "project_id": "isharingapp-58c82",
+    "storage_bucket": "isharingapp-58c82.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:615193013828:android:2c253397c023bb54c15611",
+        "android_client_info": {
+          "package_name": "com.example.isharing"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAL6uWLTprr3foBzt4irKBWbR_UmfHEAq4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
