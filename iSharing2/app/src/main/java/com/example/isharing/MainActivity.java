@@ -24,11 +24,11 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        db= FirebaseFirestore.getInstance();
         setContentView(R.layout.activity_main);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
         user.put("middle", "Mathison");
         user.put("last", "Turing");
         user.put("born", 1912);
+        db= FirebaseFirestore.getInstance();
+
 
 // Add a new document with a generated ID
         db.collection("users")
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
 //                        Log.w(TAG, "Error adding document", e);
+
                         Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
