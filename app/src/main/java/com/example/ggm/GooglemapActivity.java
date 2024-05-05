@@ -72,6 +72,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // Xử lý sự kiện khi nhấn vào nút "Nhà hàng"
         btnRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +80,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
+        // Xử lý sự kiện khi nhấn vào nút "Mở lịch sử tìm kiếm"
         Button btnOpenSearchHistory = findViewById(R.id.btnOpenSearchHistory);
         btnOpenSearchHistory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +89,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
+        // Xử lý sự kiện khi nhấn vào nút "Khách sạn"
         btnHotel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,13 +97,15 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
+        // Xử lý sự kiện khi nhấn vào nút "Bạn bè"
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Your logic to show nearby friends
+                // Thêm logic của bạn để hiển thị bạn bè gần đây
             }
         });
 
+        // Xử lý tìm kiếm khi nhập từ khóa vào SearchView
         mapSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -123,7 +128,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
 
                         updateSearchHistory(location);
                     } else {
-                        Toast.makeText(GooglemapActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GooglemapActivity.this, "Không tìm thấy địa điểm", Toast.LENGTH_SHORT).show();
                     }
                 }
                 return false;
@@ -135,13 +140,14 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
+        // Xử lý sự kiện khi nhấn vào nút "Vị trí hiện tại"
         btnCurrentLocation.setOnClickListener(v -> {
             if (currentLocation != null && mMap != null) {
                 LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                 if (currentMarker != null) {
                     currentMarker.remove();
                 }
-                currentMarker = mMap.addMarker(new MarkerOptions().position(currentLatLng).title("Your Location").icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(
+                currentMarker = mMap.addMarker(new MarkerOptions().position(currentLatLng).title("Vị trí của bạn").icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(
                         getApplicationContext(),
                         R.drawable.yourlocate))));
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 25));
@@ -149,6 +155,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         });
     }
 
+    // Hàm để di chuyển đánh dấu đến vị trí mới
     private void moveMarkerToLocation(LatLng latLng, String title) {
         if (localMarker != null) {
             localMarker.remove();
@@ -157,15 +164,16 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
     }
 
+    // Hàm để hiển thị hộp thoại hỏi người dùng có muốn điều hướng tới địa điểm không
     private void showDirectionsDialog(final LatLng destinationLatLng) {
         if (currentLocation == null) {
-            Toast.makeText(this, "Cannot determine current location", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không thể xác định vị trí hiện tại", Toast.LENGTH_SHORT).show();
             return;
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(GooglemapActivity.this);
-        builder.setMessage("Do you want directions to this location?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        builder.setMessage("Bạn có muốn điều hướng tới địa điểm này không?")
+                .setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         float[] results = new float[1];
                         Location.distanceBetween(
@@ -180,11 +188,11 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                         if (mapIntent.resolveActivity(getPackageManager()) != null) {
                             startActivity(mapIntent);
                         } else {
-                            Toast.makeText(GooglemapActivity.this, "Unable to open map app", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(GooglemapActivity.this, "Không thể mở ứng dụng bản đồ", Toast.LENGTH_SHORT).show();
                         }
                     }
                 })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Hủy", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         float[] results = new float[1];
                         Location.distanceBetween(
@@ -194,7 +202,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                         double distance = results[0] / 1000;
 
                         AlertDialog.Builder distanceAlertBuilder = new AlertDialog.Builder(GooglemapActivity.this);
-                        distanceAlertBuilder.setMessage("The distance from your current location to the location is " + distance + "km")
+                        distanceAlertBuilder.setMessage("Khoảng cách từ vị trí hiện tại đến địa điểm là " + distance + "km")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -239,7 +247,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             }
             currentMarker = mMap.addMarker(new MarkerOptions()
                     .position(currentLatLng)
-                    .title("Your current location")
+                    .title("Vị trí hiện tại của bạn")
                     .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(
                             getApplicationContext(),
                             R.drawable.yourlocate))));
@@ -266,7 +274,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         if (mapIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(mapIntent);
         } else {
-            Toast.makeText(this, "Google Maps app not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không tìm thấy ứng dụng Google Maps", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -277,7 +285,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 getLastLocation();
             } else {
-                Toast.makeText(this, "Location permission denied, please grant permission", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Từ chối cấp quyền vị trí, vui lòng cấp quyền", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -288,14 +296,14 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             return;
         }
 
-        // Create a RecyclerView
+        // Tạo một RecyclerView
         RecyclerView recyclerView = new RecyclerView(this);
 
         // Set layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // Create and set adapter
+        // Tạo và đặt adapter
         SearchHistoryAdapter adapter = new SearchHistoryAdapter(searchHistoryList, new SearchHistoryAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(String item) {
@@ -306,36 +314,36 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         });
         recyclerView.setAdapter(adapter);
 
-        // Add item decoration
+        // Thêm item decoration
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 int position = parent.getChildAdapterPosition(view);
                 if (position != RecyclerView.NO_POSITION && position != parent.getAdapter().getItemCount() - 1) {
                     int verticalSpacing = calculateVerticalSpacing(parent, position);
-                    outRect.bottom = verticalSpacing; // Set spacing between items
+                    outRect.bottom = verticalSpacing; // Đặt khoảng cách giữa các item
                 }
             }
         });
 
-        // Create AlertDialog.Builder
+        // Tạo AlertDialog.Builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-        // Set title
+        // Đặt tiêu đề
         builder.setTitle("Lịch sử tìm kiếm");
 
-        // Set view to RecyclerView
+        // Đặt view cho RecyclerView
         builder.setView(recyclerView);
 
-        // Add positive button
-        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+        // Thêm nút positive
+        builder.setPositiveButton("Đóng", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
         });
 
-        // Show AlertDialog
+        // Hiển thị AlertDialog
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -356,7 +364,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             int spacing = remainingHeight / remainingItemCount;
 
             if (position == lastVisiblePosition) {
-                spacing = 0; // Set spacing to 0 for the last item
+                spacing = 0; // Đặt khoảng cách là 0 cho item cuối cùng
             }
 
             return spacing;
@@ -366,7 +374,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void performSearch(String query) {
-        // Handle search logic here
+        // Xử lý logic tìm kiếm ở đây
     }
 
     private void updateSearchHistory(String location) {
