@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+
+    <!-- Map Fragment -->
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="0dp" />
+
+    <Button
+        android:id="@+id/btnCurrentLocation"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="575dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="110dp"
+        android:background="@drawable/round_button"
+        android:drawableRight="@drawable/ic_my_location"
+        android:drawablePadding="4dp"
+        android:drawableTint="#ff0000"
+        android:textColor="@color/black"
+        app:backgroundTint="@null" />
+
+
+    <!-- SearchView -->
+    <SearchView
+        android:id="@+id/mapSearch"
+        android:layout_width="467dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_search_view"
+        android:elevation="5dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search..."
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- HorizontalScrollView to contain buttons -->
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mapSearch"
+        android:layout_marginTop="8dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Custom Buttons -->
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_background_restaurant"
+                android:drawableLeft="@drawable/nhahang"
+                android:text="Nhà hàng"
+                android:textColor="@color/black"
+                android:layout_marginEnd="16dp"
+                app:backgroundTint="@null" />
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_background_hotel"
+                android:drawableLeft="@drawable/khachsan"
+                android:text="Khách sạn"
+                android:textColor="@color/black"
+                android:layout_marginEnd="16dp"
+                app:backgroundTint="@null" />
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_background_friends"
+                android:drawableLeft="@drawable/banbe"
+                android:text="Bạn bè"
+                android:textColor="@color/black"
+                app:backgroundTint="@null" />
+        </LinearLayout>
+    </HorizontalScrollView>
+</RelativeLayout>

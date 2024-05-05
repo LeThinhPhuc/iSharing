@@ -6,103 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+
+
     <!-- Map Fragment -->
 
-    <!-- SearchView -->
-
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="728dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="21dp" />
-
-    <SearchView
-        android:id="@+id/mapSearch"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:queryHint="Search..."
-        android:iconifiedByDefault="false"
-        android:elevation="5dp"
-        android:background="@drawable/bg_search_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Button for Current Location -->
-
-    <!-- Custom Buttons -->
-    <!-- Đổi button_background_restaurant thành tên file drawable bạn muốn sử dụng -->
-
-    <!-- Đổi button_background_hotel thành tên file drawable bạn muốn sử dụng -->
-
     <Button
-        android:id="@+id/btnCurrentLocation"
-        android:layout_width="68dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="575dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="111dp"
-        android:background="@drawable/round_button"
-        android:drawableEnd="@drawable/ic_my_location"
-        android:drawablePadding="4dp"
-        android:drawableTint="#ff0000"
-
-        android:textColor="@color/black"
-        app:backgroundTint="@null" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="159dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="76dp"
-        android:background="@drawable/button_background_restaurant"
-        android:drawableLeft="@drawable/nhahang"
-        android:text="Nhà hàng"
-        android:textColor="@color/black"
-        app:backgroundTint="@null" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="185dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="74dp"
-        android:layout_toEndOf="@+id/button2"
-        android:background="@drawable/button_background_hotel"
-        android:drawableLeft="@drawable/khachsan"
-        android:text="Khách sạn"
-        android:textColor="@color/black"
-        app:backgroundTint="@null" />
-
-    <Button
-        android:id="@+id/button4"
+        android:id="@+id/button_google_map"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="-329dp"
-        android:layout_marginTop="146dp"
-        android:layout_marginEnd="179dp"
-        android:layout_toEndOf="@+id/button3"
-        android:background="@drawable/button_background_friends"
-        android:drawableLeft="@drawable/banbe"
-        android:text="Bạn bè"
-        android:textColor="@color/black"
-        app:backgroundTint="@null" /> <!-- Đổi button_background_friends thành tên file drawable bạn muốn sử dụng -->
+        android:text="Google Map Layout"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
