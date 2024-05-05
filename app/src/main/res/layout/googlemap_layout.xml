@@ -17,13 +17,13 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="4dp"
+        android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp" />
 
     <Button
         android:id="@+id/btnCurrentLocation"
         android:layout_width="70dp"
-        android:layout_height="wrap_content"
+        android:layout_height="70dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
@@ -34,7 +34,7 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="110dp"
         android:background="@drawable/round_button"
-        android:drawableRight="@drawable/ic_my_location"
+        android:drawableRight="@drawable/mylocation"
         android:drawablePadding="4dp"
         android:drawableTint="#ff0000"
         android:textColor="@color/black"
@@ -42,15 +42,19 @@
 
 
     <!-- SearchView -->
+
+
+    <!-- HorizontalScrollView to contain buttons -->
+
     <SearchView
         android:id="@+id/mapSearch"
-        android:layout_width="467dp"
+        android:layout_width="281dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginRight="10dp"
+
         android:layout_marginBottom="10dp"
         android:background="@drawable/bg_search_view"
         android:elevation="5dp"
@@ -60,7 +64,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- HorizontalScrollView to contain buttons -->
+    <Button
+        android:id="@+id/btnDiaHinh"
+        android:layout_width="50dp"
+        android:layout_height="46dp"
+
+
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toEndOf="@+id/mapSearch"
+        android:background="@drawable/button_dia_hinh"
+        android:drawableBottom="@drawable/diahinh"
+        android:text="Button"
+        app:backgroundTint="@null" />
+
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -114,7 +134,8 @@
                 android:background="@drawable/button_background_history"
                 android:drawableLeft="@drawable/history"
                 app:backgroundTint="@null"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:text="Lịch sử"/>
 
         </LinearLayout>
     </HorizontalScrollView>
