@@ -15,11 +15,14 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -55,18 +58,19 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     private Button btnCurrentLocation;
     private Marker currentMarker;
     private ArrayList<String> searchHistoryList = new ArrayList<>();
-
+    private Button btnDiaHinh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.googlemap_layout);
         mapSearchView = findViewById(R.id.mapSearch);
+        btnDiaHinh=findViewById(R.id.btnDiaHinh);
         btnCurrentLocation = findViewById(R.id.btnCurrentLocation);
         btnRestaurant = findViewById(R.id.button2);
         btnHotel = findViewById(R.id.button3);
         btnFriends = findViewById(R.id.button4);
-
+        registerForContextMenu(btnDiaHinh);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -385,4 +389,46 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         }
         searchHistoryList.add(location);
     }
+
+    @Override
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.menu_dia_hinh, menu);
+    }
+
+
+    @Override
+
+
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.macdinh) {
+            // Xử lý khi người dùng chọn mục mặc định
+            if (mMap != null) {
+                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            }
+            Toast.makeText(this, "Mặc định", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (itemId == R.id.vetinh) {
+            if (mMap != null) {
+                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            }
+            // Xử lý khi người dùng chọn mục vệ tinh
+            Toast.makeText(this, "Vệ tinh", Toast.LENGTH_SHORT).show();
+            return true;
+        } else if (itemId == R.id.diahinh) {
+            // Xử lý khi người dùng chọn mục địa hình
+            if (mMap != null) {
+                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+            }
+            Toast.makeText(this, "Địa hình", Toast.LENGTH_SHORT).show();
+            return true;
+        } else {
+            return super.onContextItemSelected(item);
+        }
+    }
+
+
+
 }
