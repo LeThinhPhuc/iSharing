@@ -74,27 +74,29 @@
             android:gravity="center">
 
             <!-- Custom Buttons -->
+
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/button_background_restaurant"
                 android:drawableLeft="@drawable/nhahang"
                 android:text="Nhà hàng"
                 android:textColor="@color/black"
-                android:layout_marginEnd="16dp"
                 app:backgroundTint="@null" />
 
             <Button
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/button_background_hotel"
                 android:drawableLeft="@drawable/khachsan"
                 android:text="Khách sạn"
                 android:textColor="@color/black"
-                android:layout_marginEnd="16dp"
                 app:backgroundTint="@null" />
+
             <Button
                 android:id="@+id/button4"
                 android:layout_width="wrap_content"
@@ -103,7 +105,20 @@
                 android:drawableLeft="@drawable/banbe"
                 android:text="Bạn bè"
                 android:textColor="@color/black"
+                android:layout_marginEnd="16dp"
                 app:backgroundTint="@null" />
+            <Button
+                android:id="@+id/btnOpenSearchHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_background_history"
+                android:drawableLeft="@drawable/history"
+                app:backgroundTint="@null"
+                android:textColor="@color/black" />
+
         </LinearLayout>
     </HorizontalScrollView>
+
+
+
 </RelativeLayout>
