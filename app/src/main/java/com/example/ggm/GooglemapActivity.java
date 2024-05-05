@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -23,6 +24,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -38,6 +41,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -50,6 +54,8 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     private SearchView mapSearchView;
     private Button btnCurrentLocation;
     private Marker currentMarker;
+    private ArrayList<String> searchHistoryList = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +76,14 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(View v) {
                 showNearbyPlaces("restaurant");
+            }
+        });
+
+        Button btnOpenSearchHistory = findViewById(R.id.btnOpenSearchHistory);
+        btnOpenSearchHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openSearchHistory();
             }
         });
 
@@ -103,11 +117,11 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                         Address address = addressList.get(0);
                         LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
 
-                        // Move the marker to the new location
                         moveMarkerToLocation(latLng, location);
 
-                        // Show dialog to choose "Directions"
                         showDirectionsDialog(latLng);
+
+                        updateSearchHistory(location);
                     } else {
                         Toast.makeText(GooglemapActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
                     }
@@ -136,7 +150,6 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void moveMarkerToLocation(LatLng latLng, String title) {
-
         if (localMarker != null) {
             localMarker.remove();
         }
@@ -154,15 +167,13 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         builder.setMessage("Do you want directions to this location?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Calculate distance and show message
                         float[] results = new float[1];
                         Location.distanceBetween(
                                 currentLocation.getLatitude(), currentLocation.getLongitude(),
                                 destinationLatLng.latitude, destinationLatLng.longitude,
                                 results);
-                        double distance = results[0] / 1000; // Convert from meters to kilometers
+                        double distance = results[0] / 1000;
 
-                        // Open map app or navigation service and navigate from current location to searched location
                         Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destinationLatLng.latitude + "," + destinationLatLng.longitude);
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");
@@ -175,15 +186,13 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                 })
                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Display distance message
                         float[] results = new float[1];
                         Location.distanceBetween(
                                 currentLocation.getLatitude(), currentLocation.getLongitude(),
                                 destinationLatLng.latitude, destinationLatLng.longitude,
                                 results);
-                        double distance = results[0] / 1000; // Convert from meters to kilometers
+                        double distance = results[0] / 1000;
 
-                        // Create distance message
                         AlertDialog.Builder distanceAlertBuilder = new AlertDialog.Builder(GooglemapActivity.this);
                         distanceAlertBuilder.setMessage("The distance from your current location to the location is " + distance + "km")
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -234,7 +243,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                     .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(
                             getApplicationContext(),
                             R.drawable.yourlocate))));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15)); // Change here to zoom level 15
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
             mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.getUiSettings().setCompassEnabled(true);
         }
@@ -251,7 +260,6 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     private void showNearbyPlaces(String type) {
-        // Show nearby places on your map
         Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + type);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
@@ -272,5 +280,101 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                 Toast.makeText(this, "Location permission denied, please grant permission", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void openSearchHistory() {
+        if (searchHistoryList.isEmpty()) {
+            Toast.makeText(this, "Không có lịch sử tìm kiếm gần đây", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Create a RecyclerView
+        RecyclerView recyclerView = new RecyclerView(this);
+
+        // Set layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
+        // Create and set adapter
+        SearchHistoryAdapter adapter = new SearchHistoryAdapter(searchHistoryList, new SearchHistoryAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(String item) {
+                mapSearchView.setQuery(item, true);
+                mapSearchView.clearFocus();
+                performSearch(item);
+            }
+        });
+        recyclerView.setAdapter(adapter);
+
+        // Add item decoration
+        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+            @Override
+            public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                int position = parent.getChildAdapterPosition(view);
+                if (position != RecyclerView.NO_POSITION && position != parent.getAdapter().getItemCount() - 1) {
+                    int verticalSpacing = calculateVerticalSpacing(parent, position);
+                    outRect.bottom = verticalSpacing; // Set spacing between items
+                }
+            }
+        });
+
+        // Create AlertDialog.Builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        // Set title
+        builder.setTitle("Lịch sử tìm kiếm");
+
+        // Set view to RecyclerView
+        builder.setView(recyclerView);
+
+        // Add positive button
+        builder.setPositiveButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        // Show AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private int calculateVerticalSpacing(RecyclerView parent, int position) {
+        RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
+        if (layoutManager instanceof LinearLayoutManager) {
+            LinearLayoutManager linearLayoutManager = (LinearLayoutManager) layoutManager;
+            int height = parent.getHeight();
+            int itemCount = parent.getAdapter().getItemCount();
+            int lastVisiblePosition = linearLayoutManager.findLastVisibleItemPosition();
+
+            View currentView = parent.getChildAt(position);
+            int currentViewHeight = currentView.getHeight();
+
+            int remainingHeight = height - currentViewHeight * (position + 1);
+            int remainingItemCount = itemCount - position - 1;
+            int spacing = remainingHeight / remainingItemCount;
+
+            if (position == lastVisiblePosition) {
+                spacing = 0; // Set spacing to 0 for the last item
+            }
+
+            return spacing;
+        }
+
+        return 0;
+    }
+
+    private void performSearch(String query) {
+        // Handle search logic here
+    }
+
+    private void updateSearchHistory(String location) {
+        if (searchHistoryList.contains(location)) {
+            searchHistoryList.remove(location);
+        } else if (searchHistoryList.size() >= 5) {
+            searchHistoryList.remove(0);
+        }
+        searchHistoryList.add(location);
     }
 }
