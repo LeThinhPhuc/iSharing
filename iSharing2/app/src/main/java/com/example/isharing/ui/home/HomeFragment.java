@@ -27,10 +27,8 @@ public class HomeFragment extends Fragment {
         View root = binding.getRoot();
 
         SearchView searchView = root.findViewById(R.id.search_view);
-        searchView.setQueryHint("Your placeholder text here");
+        searchView.setQueryHint("Search...");
 
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 
