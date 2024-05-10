@@ -17,8 +17,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp" />
+        android:layout_marginEnd="-1dp"
+        android:layout_marginBottom="4dp" />
 
     <Button
         android:id="@+id/btnCurrentLocation"
@@ -48,12 +48,12 @@
 
     <SearchView
         android:id="@+id/mapSearch"
-        android:layout_width="281dp"
+        android:layout_width="219dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
+
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+
 
         android:layout_marginBottom="10dp"
         android:background="@drawable/bg_search_view"
@@ -68,12 +68,10 @@
         android:id="@+id/btnDiaHinh"
         android:layout_width="50dp"
         android:layout_height="46dp"
+        android:layout_marginStart="65dp"
 
-
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
+
         android:layout_marginBottom="10dp"
         android:layout_toEndOf="@+id/mapSearch"
         android:background="@drawable/button_dia_hinh"
@@ -140,6 +138,18 @@
         </LinearLayout>
     </HorizontalScrollView>
 
+    <ImageButton
+        android:id="@+id/btn_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="3dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_toEndOf="@id/mapSearch"
+        app:srcCompat="@android:drawable/ic_btn_speak_now" />
 
 
 </RelativeLayout>
