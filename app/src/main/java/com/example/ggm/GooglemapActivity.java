@@ -15,14 +15,17 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -46,30 +49,31 @@ import com.google.android.gms.tasks.Task;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private Button btnRestaurant, btnHotel, btnFriends;
+    private Button btnRestaurant, btnHotel, btnFriends, btnDiaHinh, btnCurrentLocation, btnVoice;
     private final int REQUEST_CODE_GPS_PERMISSION = 1;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location currentLocation;
     private Marker localMarker;
     private SearchView mapSearchView;
-    private Button btnCurrentLocation;
     private Marker currentMarker;
     private ArrayList<String> searchHistoryList = new ArrayList<>();
-    private Button btnDiaHinh;
+    private String currentLocationString; // Biến chứa thông tin vị trí hiện tại dưới dạng chuỗi "Latitude,Longitude"
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.googlemap_layout);
         mapSearchView = findViewById(R.id.mapSearch);
-        btnDiaHinh=findViewById(R.id.btnDiaHinh);
+        btnDiaHinh = findViewById(R.id.btnDiaHinh);
         btnCurrentLocation = findViewById(R.id.btnCurrentLocation);
         btnRestaurant = findViewById(R.id.button2);
         btnHotel = findViewById(R.id.button3);
         btnFriends = findViewById(R.id.button4);
+        ImageButton btnVoice = findViewById(R.id.btn_voice);
         registerForContextMenu(btnDiaHinh);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
@@ -109,6 +113,28 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             }
         });
 
+        // Xử lý sự kiện khi nhấn vào nút "Vị trí hiện tại"
+        btnCurrentLocation.setOnClickListener(v -> {
+            if (currentLocation != null && mMap != null) {
+                LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                if (currentMarker != null) {
+                    currentMarker.remove();
+                }
+                currentMarker = mMap.addMarker(new MarkerOptions().position(currentLatLng).title("Vị trí của bạn").icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(
+                        getApplicationContext(),
+                        R.drawable.yourlocate))));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 25));
+            }
+        });
+
+        // Xử lý sự kiện khi nhấn vào nút "Voice"
+        btnVoice.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startVoiceInput();
+            }
+        });
+
         // Xử lý tìm kiếm khi nhập từ khóa vào SearchView
         mapSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -141,20 +167,6 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
-            }
-        });
-
-        // Xử lý sự kiện khi nhấn vào nút "Vị trí hiện tại"
-        btnCurrentLocation.setOnClickListener(v -> {
-            if (currentLocation != null && mMap != null) {
-                LatLng currentLatLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-                if (currentMarker != null) {
-                    currentMarker.remove();
-                }
-                currentMarker = mMap.addMarker(new MarkerOptions().position(currentLatLng).title("Vị trí của bạn").icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(
-                        getApplicationContext(),
-                        R.drawable.yourlocate))));
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 25));
             }
         });
     }
@@ -221,7 +233,6 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         dialog.show();
     }
 
-
     private void getLastLocation() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE_GPS_PERMISSION);
@@ -233,6 +244,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
+                    currentLocationString = getCurrentLocationString(); // Cập nhật giá trị của biến currentLocationString
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                     mapFragment.getMapAsync(GooglemapActivity.this);
                 }
@@ -240,6 +252,16 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         });
     }
 
+    // Phương thức để lấy thông tin vị trí hiện tại dưới dạng chuỗi "Latitude,Longitude"
+    private String getCurrentLocationString() {
+        if (currentLocation != null) {
+            double latitude = currentLocation.getLatitude();
+            double longitude = currentLocation.getLongitude();
+            return String.format("%f,%f", latitude, longitude);
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -391,16 +413,12 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     }
 
     @Override
-
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         getMenuInflater().inflate(R.menu.menu_dia_hinh, menu);
     }
 
-
     @Override
-
-
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.macdinh) {
@@ -429,6 +447,36 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         }
     }
 
+    // Phương thức để bắt đầu nhập giọng nói từ người dùng
+    private void startVoiceInput() {
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        intent.putExtra(RecognizerIntent.EXTRA_PROMPT, "Hãy nói điều gì đó...");
 
+        try {
+            startActivityForResult(intent, REQUEST_CODE_SPEECH_INPUT);
+        } catch (Exception e) {
+            Toast.makeText(this, "Thiết bị của bạn không hỗ trợ chức năng này", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    // Hằng số để xác định mã yêu cầu cho nhập giọng nói
+    private static final int REQUEST_CODE_SPEECH_INPUT = 1000;
+
+    // Phương thức này được gọi sau khi người dùng hoàn thành nhập giọng nói
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_CODE_SPEECH_INPUT) {
+            if (resultCode == RESULT_OK && null != data) {
+                ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                if (result != null && result.size() > 0) {
+                    String spokenText = result.get(0);
+                    mapSearchView.setQuery(spokenText, true);
+                }
+            }
+        }
+    }
 }
