@@ -198,6 +198,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                                 results);
                         double distance = results[0] / 1000;
 
+                        // Mở ứng dụng Google Maps và hiển thị đường đi
                         Uri gmmIntentUri = Uri.parse("google.navigation:q=" + destinationLatLng.latitude + "," + destinationLatLng.longitude);
                         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                         mapIntent.setPackage("com.google.android.apps.maps");
