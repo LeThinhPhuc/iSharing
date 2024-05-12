@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="list_item_layout_name">Name</string>
+    <string name="list_item_layout_follow">Follow</string>
+    <string name="button_follow">Follow</string>
+    <string name="button_following">Following</string>
+</resources>
