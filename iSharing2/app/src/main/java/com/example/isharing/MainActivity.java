@@ -12,6 +12,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
@@ -25,6 +26,7 @@ import java.util.Map;
 public class MainActivity extends AppCompatActivity {
     FirebaseFirestore db;
 
+    private GoogleSignInClient client;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,26 +46,22 @@ public class MainActivity extends AppCompatActivity {
         db= FirebaseFirestore.getInstance();
 
 
-// Add a new document with a generated ID
         db.collection("users")
                 .add(user)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-//                        Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
                         Toast.makeText(MainActivity.this, "Success", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-//                        Log.w(TAG, "Error adding document", e);
 
                         Toast.makeText(MainActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    // Create a new user with a first, middle, and last name
 
 }

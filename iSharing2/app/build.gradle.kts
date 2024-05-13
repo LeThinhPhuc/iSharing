@@ -30,7 +30,6 @@ android {
 }
 
 dependencies {
-    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -43,5 +42,18 @@ dependencies {
     implementation ("com.google.firebase:firebase-auth")
     implementation ("com.google.firebase:firebase-firestore:24.11.1")
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.android.gms:play-services-maps:18.2.0")
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
+
+
+//     Import the BoM for the Firebase platform
+        implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+
+        // Declare the dependency for the Cloud Firestore library
+        // When using the BoM, you don't specify versions in Firebase library dependencies
+        implementation("com.google.firebase:firebase-firestore")
+
+
+
 
 }
