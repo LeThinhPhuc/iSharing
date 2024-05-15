@@ -1,26 +1,44 @@
 {
   "project_info": {
-    "project_number": "615193013828",
-    "project_id": "isharingapp-58c82",
-    "storage_bucket": "isharingapp-58c82.appspot.com"
+    "project_number": "910466673263",
+    "project_id": "isharing-91d7e",
+    "storage_bucket": "isharing-91d7e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:615193013828:android:2c253397c023bb54c15611",
+        "mobilesdk_app_id": "1:910466673263:android:d524f8d58e5d49269c7b9a",
         "android_client_info": {
           "package_name": "com.example.isharing"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "910466673263-flo51fljh2pkisfcdg0b98hrup6j820g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.isharing",
+            "certificate_hash": "0c8d969bb745eb891443261329f6e167a3cc7dfd"
+          }
+        },
+        {
+          "client_id": "910466673263-utor4ui85hccuc6j3oh08cl6t2rh1o04.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyAL6uWLTprr3foBzt4irKBWbR_UmfHEAq4"
+          "current_key": "AIzaSyB4dGdwoA5ZuCHY_ffiaQyu5hpvDGMKbsU"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "910466673263-utor4ui85hccuc6j3oh08cl6t2rh1o04.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
