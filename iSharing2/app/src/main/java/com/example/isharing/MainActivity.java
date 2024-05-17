@@ -1,6 +1,9 @@
 package com.example.isharing;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -21,6 +25,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,69 +54,58 @@ public class MainActivity extends AppCompatActivity {
     FirebaseAuth auth;
     ShapeableImageView imageView;
     TextView name, mail;
-
+    FusedLocationProviderClient fusedLocationClient;
     GoogleSignInClient googleSignInClient;
+
     private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
         public void onActivityResult(ActivityResult result) {
-            if(result.getResultCode() ==RESULT_OK){
+            if (result.getResultCode() == RESULT_OK) {
                 Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                try{
+                try {
                     GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
-                    AuthCredential authCredential= GoogleAuthProvider.getCredential(signInAccount.getIdToken(),null);
+                    AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
                     auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 auth = FirebaseAuth.getInstance();
                                 String uid = Objects.requireNonNull(auth.getCurrentUser()).getUid();
                                 db = FirebaseFirestore.getInstance();
 
-                                Map<String, Object> user = new HashMap<>();
-                                user.put("Name", auth.getCurrentUser().getDisplayName());
-                                user.put("Email", auth.getCurrentUser().getEmail());
-                                user.put("Photo", Objects.requireNonNull(auth.getCurrentUser()).getPhotoUrl());
-                                db.collection("users").add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Toast.makeText(MainActivity.this, "luu thanh cong goi", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                                // Kiểm tra xem tài liệu người dùng đã tồn tại hay chưa
+                                // Check if the user document exists
                                 db.collection("users").document(uid).get()
                                         .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-
                                             @Override
                                             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                Toast.makeText(MainActivity.this, "cb ne ne them", Toast.LENGTH_SHORT).show();
-
                                                 if (documentSnapshot.exists()) {
-                                                    // Người dùng đã tồn tại, có thể cập nhật thông tin nếu cần thiết
-                                                    Toast.makeText(MainActivity.this, "cb update", Toast.LENGTH_SHORT).show();
-
+                                                    // User exists, update their information
                                                     updateUserInfo(uid, auth.getCurrentUser().getDisplayName(), auth.getCurrentUser().getEmail(), Objects.requireNonNull(auth.getCurrentUser().getPhotoUrl()));
                                                 } else {
-                                                    // Người dùng chưa tồn tại, lưu thông tin mới
-                                Toast.makeText(MainActivity.this, "cb them", Toast.LENGTH_SHORT).show();
-
+                                                    // User does not exist, save new user information
                                                     saveUserInfo(uid, auth.getCurrentUser().getDisplayName(), auth.getCurrentUser().getEmail(), Objects.requireNonNull(auth.getCurrentUser().getPhotoUrl()));
                                                 }
                                             }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(MainActivity.this, "Failed to check user existence: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                            }
                                         });
 
-                                // Cập nhật giao diện người dùng
-                                Glide.with(MainActivity.this).load(Objects.requireNonNull(auth.getCurrentUser()).getPhotoUrl()).into(imageView);
+                                // Update UI
+                                Glide.with(MainActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(imageView);
                                 name.setText(auth.getCurrentUser().getDisplayName());
                                 mail.setText(auth.getCurrentUser().getEmail());
-//                                Toast.makeText(MainActivity.this, "Signed in success", Toast.LENGTH_SHORT).show();
                             } else {
-                                Toast.makeText(MainActivity.this, "Fail "+ task.getException(), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-                }catch(ApiException e){
+                } catch (ApiException e) {
                     e.printStackTrace();
+                    Toast.makeText(MainActivity.this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         }
@@ -120,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         db = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         imageView = findViewById(R.id.profileImage);
         name = findViewById(R.id.nameTV);
@@ -159,58 +158,163 @@ public class MainActivity extends AppCompatActivity {
         });
 
         if (auth.getCurrentUser() != null) {
-            Glide.with(MainActivity.this).load(Objects.requireNonNull(auth.getCurrentUser()).getPhotoUrl()).into(imageView);
+            Glide.with(MainActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(imageView);
             name.setText(auth.getCurrentUser().getDisplayName());
             mail.setText(auth.getCurrentUser().getEmail());
         }
+
+        // Request location permissions if not granted
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+        } else {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        }
     }
 
-    // Hàm để lưu thông tin người dùng vào Firestore lần đầu tiên
-    private void saveUserInfo(String uid, String displayName, String email, Uri photoUrl) {
-        Map<String, Object> user = new HashMap<>();
-        user.put("Name", displayName);
-        user.put("Email", email);
-        user.put("Photo", photoUrl.toString());
-        // Thêm các thông tin khác của người dùng nếu cần
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            } else {
+                Toast.makeText(this, "Location permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
-        db.collection("users").document(uid)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+    private void saveUserInfo(String uid, String displayName, String email, Uri photoUrl) {
+        // Get the current location
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
-                    public void onSuccess(Void aVoid) {
-                        // Thành công, hiển thị thông tin của người dùng và các hành động khác
-                        Toast.makeText(MainActivity.this, "Save successfully", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Lỗi khi lưu thông tin người dùng vào Firestore
-                        Toast.makeText(MainActivity.this, "Save fail", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            // Create user data map with location
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("Name", displayName);
+                            user.put("Email", email);
+                            user.put("Photo", photoUrl.toString());
+                            user.put("Latitude", location.getLatitude());
+                            user.put("Longitude", location.getLongitude());
+
+                            // Save user info to Firestore
+                            db.collection("users").document(uid)
+                                    .set(user)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(MainActivity.this, "User information saved successfully", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(MainActivity.this, "Failed to save user information: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                        } else {
+                            requestLocationUpdates();
+                        }
                     }
                 });
     }
 
-    // Hàm để cập nhật thông tin người dùng trong Firestore
     private void updateUserInfo(String uid, String displayName, String email, Uri photoUrl) {
         DocumentReference userRef = db.collection("users").document(uid);
 
-        // Cập nhật thông tin người dùng trong tài liệu
-        userRef.update("Name", displayName,
-                        "Email", email,
-                        "Photo", photoUrl.toString())
+        // Check permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Location permissions are not granted", Toast.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            return;
+        }
+
+        // Get the current location
+        fusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        if (location != null) {
+                            // Update user data with location
+                            userRef.update("Name", displayName,
+                                            "Email", email,
+                                            "Photo", photoUrl.toString(),
+                                            "Latitude", location.getLatitude(),
+                                            "Longitude", location.getLongitude())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(MainActivity.this, "User information updated successfully", Toast.LENGTH_SHORT).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(MainActivity.this, "Failed to update user information: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                        } else {
+                            requestLocationUpdates();
+                        }
+                    }
+                });
+    }
+
+    private void requestLocationUpdates() {
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000); // 10 seconds
+        locationRequest.setFastestInterval(5000); // 5 seconds
+
+        LocationCallback locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    Toast.makeText(MainActivity.this, "Failed to retrieve location", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        fusedLocationClient.removeLocationUpdates(this);
+                        updateUserLocation(location);
+                    }
+                }
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
+            return;
+        }
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
+    }
+
+    private void updateUserLocation(Location location) {
+        String uid = Objects.requireNonNull(auth.getCurrentUser()).getUid();
+        DocumentReference userRef = db.collection("users").document(uid);
+
+        userRef.update("Name", auth.getCurrentUser().getDisplayName(),
+                        "Email", auth.getCurrentUser().getEmail(),
+                        "Photo", Objects.requireNonNull(auth.getCurrentUser().getPhotoUrl()).toString(),
+                        "Latitude", location.getLatitude(),
+                        "Longitude", location.getLongitude())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        // Thành công, hiển thị thông tin của người dùng và các hành động khác
-                        Toast.makeText(MainActivity.this, "Update successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "User information updated successfully", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // Lỗi khi cập nhật thông tin người dùng trong Firestore
-                        Toast.makeText(MainActivity.this, "Update Fail", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Failed to update user information: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
     }
