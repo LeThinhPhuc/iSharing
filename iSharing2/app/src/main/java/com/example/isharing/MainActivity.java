@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                     AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
                     auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
+
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 auth = FirebaseAuth.getInstance();
@@ -98,11 +99,19 @@ public class MainActivity extends AppCompatActivity {
                                 Glide.with(MainActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(imageView);
                                 name.setText(auth.getCurrentUser().getDisplayName());
                                 mail.setText(auth.getCurrentUser().getEmail());
+
+                                // Navigate to ListFriends
+                                navigateToListFriends();
                             } else {
                                 Toast.makeText(MainActivity.this, "Authentication failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
+
                     });
+
+                    Intent myintent = new Intent(MainActivity.this, ListFriends.class);
+                    startActivity(myintent);
+
                 } catch (ApiException e) {
                     e.printStackTrace();
                     Toast.makeText(MainActivity.this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
@@ -135,33 +144,33 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        MaterialButton signOut = findViewById(R.id.signout);
-        signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-                    @Override
-                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                        if (firebaseAuth.getCurrentUser() == null) {
-                            googleSignInClient.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(MainActivity.this, "Signed out successfully", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(MainActivity.this, MainActivity.class));
-                                }
-                            });
-                        }
-                    }
-                });
-                FirebaseAuth.getInstance().signOut();
-            }
-        });
+//        MaterialButton signOut = findViewById(R.id.signout);
+//        signOut.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                FirebaseAuth.getInstance().addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+//                    @Override
+//                    public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+//                        if (firebaseAuth.getCurrentUser() == null) {
+//                            googleSignInClient.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void unused) {
+//                                    Toast.makeText(MainActivity.this, "Signed out successfully", Toast.LENGTH_SHORT).show();
+//                                    startActivity(new Intent(MainActivity.this, MainActivity.class));
+//                                }
+//                            });
+//                        }
+//                    }
+//                });
+//                FirebaseAuth.getInstance().signOut();
+//            }
+//        });
 
-        if (auth.getCurrentUser() != null) {
-            Glide.with(MainActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(imageView);
-            name.setText(auth.getCurrentUser().getDisplayName());
-            mail.setText(auth.getCurrentUser().getEmail());
-        }
+//        if (auth.getCurrentUser() != null) {
+//            Glide.with(MainActivity.this).load(auth.getCurrentUser().getPhotoUrl()).into(imageView);
+//            name.setText(auth.getCurrentUser().getDisplayName());
+//            mail.setText(auth.getCurrentUser().getEmail());
+//        }
 
         // Request location permissions if not granted
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -318,4 +327,23 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void navigateToListFriends() {
+        // Get current user data
+        String displayName = auth.getCurrentUser().getDisplayName();
+        String email = auth.getCurrentUser().getEmail();
+        Uri photoUrl = auth.getCurrentUser().getPhotoUrl();
+
+        // Create an Intent to start ListFriends activity
+        Intent intent = new Intent(MainActivity.this, ListFriends.class);
+
+        // Add user data to the Intent
+        intent.putExtra("displayName", displayName);
+        intent.putExtra("email", email);
+        intent.putExtra("photoUrl", photoUrl.toString());
+
+        // Start ListFriends activity
+        startActivity(intent);
+    }
+
 }
