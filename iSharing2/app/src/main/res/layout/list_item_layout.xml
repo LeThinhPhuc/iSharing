@@ -7,23 +7,24 @@
 
     <TextView
         android:id="@+id/textViewName"
-        android:layout_width="374dp"
-        android:layout_height="49dp"
+        android:layout_width="369dp"
+        android:layout_height="28dp"
         android:layout_weight="1"
         android:text="@string/list_item_layout_name"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.38"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.022" />
 
     <Button
         android:id="@+id/buttonFollow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="276dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginTop="4dp"
         android:text="@string/list_item_layout_follow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 public class CustomAdapter extends ArrayAdapter<String> {
@@ -20,8 +22,9 @@ public class CustomAdapter extends ArrayAdapter<String> {
         mContext = context;
         mUserList = userList;
     }
+    @NonNull
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(mContext).inflate(R.layout.list_item_layout, parent, false);
         }
@@ -37,10 +40,10 @@ public class CustomAdapter extends ArrayAdapter<String> {
 
         if (!isFollowing[0]) {
             buttonFollow.setText(R.string.button_follow);
-            buttonFollow.setBackgroundColor(Color.BLUE);
+            buttonFollow.setBackgroundColor(Color.parseColor("#6B9CC5"));
         } else {
             buttonFollow.setText(R.string.button_following);
-            buttonFollow.setBackgroundColor(Color.GREEN);
+            buttonFollow.setBackgroundColor(Color.parseColor("#99D97D"));
         }
 
         buttonFollow.setOnClickListener(new View.OnClickListener() {
@@ -50,10 +53,10 @@ public class CustomAdapter extends ArrayAdapter<String> {
                 // Update UI accordingly
                 if (!isFollowing[0]) {
                     buttonFollow.setText(R.string.button_following);
-                    buttonFollow.setBackgroundColor(Color.GREEN);
+                    buttonFollow.setBackgroundColor(Color.parseColor("#99D97D")); // Green color
                 } else {
                     buttonFollow.setText(R.string.button_follow);
-                    buttonFollow.setBackgroundColor(Color.BLUE);
+                    buttonFollow.setBackgroundColor(Color.parseColor("#6B9CC5")); // Blue color
                 }
                 isFollowing[0] = !isFollowing[0];
             }
