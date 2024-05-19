@@ -16,12 +16,18 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,9 +51,16 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -60,9 +73,10 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     private Marker localMarker;
     private SearchView mapSearchView;
     private Marker currentMarker;
+    private Switch swtShareLocation;
     private ArrayList<String> searchHistoryList = new ArrayList<>();
     private String currentLocationString; // Biến chứa thông tin vị trí hiện tại dưới dạng chuỗi "Latitude,Longitude"
-
+    public String user = LoginActivity.getUserId();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +89,13 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         btnFriends = findViewById(R.id.button4);
         ImageButton btnVoice = findViewById(R.id.btn_voice);
         registerForContextMenu(btnDiaHinh);
+        swtShareLocation=findViewById(R.id.swt_shareLocation);
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("users");
 
         // Xử lý sự kiện khi nhấn vào nút "Nhà hàng"
         btnRestaurant.setOnClickListener(new View.OnClickListener() {
@@ -109,9 +126,47 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Thêm logic của bạn để hiển thị bạn bè gần đây
+                showFriendsPopupMenu();
+                if (currentLocation != null) {
+                    showFriendsOnMap();
+                } else {
+                    Toast.makeText(GooglemapActivity.this, "Current location is not available", Toast.LENGTH_SHORT).show();
+                }
+                if (mMap != null) {
+                    DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(user).child("friends");
+                }
+                usersRef.child(user).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Duyệt qua từng node con trong danh sách bạn bè
+                        for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
+                            // Lấy giá trị của id, latitude và longitude từ mỗi node bạn bè
+                            String friendName = friendSnapshot.getKey(); // Tên của bạn bè
+                            String friendId = friendSnapshot.child("id").getValue(String.class); // Id của bạn bè
+                            double latitude = friendSnapshot.child("latitude").getValue(Double.class); // Latitude của bạn bè
+                            double longitude = friendSnapshot.child("longitude").getValue(Double.class);
+                            // Longitude của bạn bè
+                            if (latitude != 0 && longitude != 0) {
+                                LatLng friendLatLng = new LatLng(latitude, longitude);
+                                mMap.addMarker(new MarkerOptions().position(friendLatLng).title(friendId).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            }// Sử dụng các giá trị đã lấy được ở đây (ví dụ: in ra console)
+                            Log.d("FirebaseData", "Friend Name: " + friendName);
+                            Log.d("FirebaseData", "Friend Id: " + friendId);
+                            Log.d("FirebaseData", "Latitude: " + latitude);
+                            Log.d("FirebaseData", "Longitude: " + longitude);
+
+                            // Đối với mỗi bạn bè, bạn có thể thực hiện các hành động khác ở đây
+                        }
+                    }
+
+                    public void onCancelled(DatabaseError databaseError) {
+                        // Xử lý lỗi nếu có
+                    }
+                });
             }
+
         });
+
 
         // Xử lý sự kiện khi nhấn vào nút "Vị trí hiện tại"
         btnCurrentLocation.setOnClickListener(v -> {
@@ -167,6 +222,23 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public boolean onQueryTextChange(String s) {
                 return false;
+            }
+        });
+        swtShareLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    // Switch is enabled - update user location to current location
+                    if (currentLocation != null) {
+                        updateUserLocationToZero();
+                        buttonView.setBackgroundColor(getResources().getColor(com.google.android.libraries.places.R.color.quantum_googred));
+
+                    }
+                } else {
+                    // Switch is disabled - update user location to 0,0
+                    updateUserLocation(currentLocation);
+                    buttonView.setBackgroundColor(getResources().getColor(com.google.android.libraries.places.R.color.quantum_googgreen));
+                }
             }
         });
     }
@@ -248,6 +320,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                     currentLocationString = getCurrentLocationString(); // Cập nhật giá trị của biến currentLocationString
                     SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
                     mapFragment.getMapAsync(GooglemapActivity.this);
+                    updateUserLocation(location);
                 }
             }
         });
@@ -274,14 +347,44 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             }
             currentMarker = mMap.addMarker(new MarkerOptions()
                     .position(currentLatLng)
-                    .title("Vị trí hiện tại của bạn")
+                    .title(user)
                     .icon(BitmapDescriptorFactory.fromBitmap(getBitmapFromVectorDrawable(
                             getApplicationContext(),
                             R.drawable.yourlocate))));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
+            updateUserLocation(currentLocation);
             mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.getUiSettings().setCompassEnabled(true);
         }
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference usersRef = database.getReference("users");
+        usersRef.child(user).child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Duyệt qua từng node con trong danh sách bạn bè
+                for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
+                    // Lấy giá trị của id, latitude và longitude từ mỗi node bạn bè
+                    String friendName = friendSnapshot.getKey(); // Tên của bạn bè
+                    String friendId = friendSnapshot.child("id").getValue(String.class); // Id của bạn bè
+                    double latitude = friendSnapshot.child("latitude").getValue(Double.class); // Latitude của bạn bè
+                    double longitude = friendSnapshot.child("longitude").getValue(Double.class);
+                    // Longitude của bạn bè
+                    if (latitude != 0 && longitude != 0) {
+                        LatLng friendLatLng = new LatLng(latitude, longitude);
+                        mMap.addMarker(new MarkerOptions().position(friendLatLng).title(friendId).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    }// Sử dụng các giá trị đã lấy được ở đây (ví dụ: in ra console)
+                    Log.d("FirebaseData", "Friend Name: " + friendName);
+                    Log.d("FirebaseData", "Friend Id: " + friendId);
+                    Log.d("FirebaseData", "Latitude: " + latitude);
+                    Log.d("FirebaseData", "Longitude: " + longitude);
+
+                    // Đối với mỗi bạn bè, bạn có thể thực hiện các hành động khác ở đây
+                }
+            }
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
+            }
+        });
     }
 
     public Bitmap getBitmapFromVectorDrawable(Context context, int drawableId) {
@@ -480,4 +583,180 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             }
         }
     }
+    // Hàm cập nhật vị trí người dùng trong Firebase
+    private void updateUserLocation(Location location) {
+        String userId = user; // Giả sử user là biến chứa ID người dùng hiện tại
+
+        // Cập nhật vị trí người dùng hiện tại
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        userRef.child("latitude").setValue(location.getLatitude());
+        userRef.child("longitude").setValue(location.getLongitude());
+
+        // Cập nhật vị trí cho các bạn bè có ID giống với userId
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String friendUserId = userSnapshot.getKey();
+                    for (DataSnapshot friendSnapshot : userSnapshot.child("friends").getChildren()) {
+                        String friendId = friendSnapshot.child("id").getValue(String.class);
+                        if (userId.equals(friendId)) {
+                            userSnapshot.getRef().child("friends").child(friendSnapshot.getKey()).child("latitude").setValue(location.getLatitude());
+                            userSnapshot.getRef().child("friends").child(friendSnapshot.getKey()).child("longitude").setValue(location.getLongitude());
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors
+            }
+        });
+    }
+
+    private void updateUserLocationToZero() {
+        String userId = user; // Giả sử user là biến chứa ID người dùng hiện tại
+
+        // Cập nhật vị trí người dùng hiện tại
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        userRef.child("latitude").setValue(0);
+        userRef.child("longitude").setValue(0);
+
+        // Cập nhật vị trí cho các bạn bè có ID giống với userId
+        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String friendUserId = userSnapshot.getKey();
+                    for (DataSnapshot friendSnapshot : userSnapshot.child("friends").getChildren()) {
+                        String friendId = friendSnapshot.child("id").getValue(String.class);
+                        if (userId.equals(friendId)) {
+                            userSnapshot.getRef().child("friends").child(friendSnapshot.getKey()).child("latitude").setValue(0);
+                            userSnapshot.getRef().child("friends").child(friendSnapshot.getKey()).child("longitude").setValue(0);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors
+            }
+        });
+    }
+    private double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+        LatLng from = new LatLng(lat1, lon1);
+        LatLng to = new LatLng(lat2, lon2);
+
+        // Sử dụng phương thức `distanceBetween` của thư viện Google Maps API để tính khoảng cách
+        float[] distance = new float[1];
+        Location.distanceBetween(from.latitude, from.longitude, to.latitude, to.longitude, distance);
+
+        // Khoảng cách tính bằng mét, chuyển đổi thành kilômét
+        return distance[0] / 1000; // Chuyển đổi từ mét sang kilômét
+    }
+
+    private void showFriendsOnMap() {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user);
+        userRef.child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
+                    String friendId = friendSnapshot.child("id").getValue(String.class);
+                    double friendLat = friendSnapshot.child("latitude").getValue(Double.class);
+                    double friendLon = friendSnapshot.child("longitude").getValue(Double.class);
+
+                    // Kiểm tra nếu lat và lon của bạn bè không phải là 0
+                    if (friendLat != 0 && friendLon != 0) {
+                        // Tính khoảng cách từ vị trí hiện tại đến bạn bè
+                        double distance = calculateDistance(currentLocation.getLatitude(), currentLocation.getLongitude(), friendLat, friendLon);
+
+                        // Thêm marker lên bản đồ
+                        LatLng friendLatLng = new LatLng(friendLat, friendLon);
+                        Marker marker = mMap.addMarker(new MarkerOptions().position(friendLatLng).title(friendId).snippet("Distance: " + distance + " kilometers"));
+
+                        // Lưu thông tin marker để xử lý sự kiện click
+                        marker.setTag(friendId);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors
+            }
+        });
+
+        // Xử lý sự kiện click vào marker
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                LatLng position = marker.getPosition();
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 15));
+                return false; // Return false để hiển thị info window
+            }
+        });
+    }
+
+    private void showFriendsPopupMenu() {
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(user);
+        userRef.child("friends").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ArrayList<String> friendNames = new ArrayList<>();
+                HashMap<String, LatLng> friendsLocations = new HashMap<>();
+
+                for (DataSnapshot friendSnapshot : dataSnapshot.getChildren()) {
+                    String friendId = friendSnapshot.child("id").getValue(String.class);
+                    double friendLat = friendSnapshot.child("latitude").getValue(Double.class);
+                    double friendLon = friendSnapshot.child("longitude").getValue(Double.class);
+
+                    // Kiểm tra nếu lat và lon của bạn bè không phải là 0
+                    if (friendLat != 0 && friendLon != 0) {
+                        friendNames.add(friendId);
+                        friendsLocations.put(friendId, new LatLng(friendLat, friendLon));
+                    }
+                }
+
+                // Nếu không có bạn bè nào chia sẻ vị trí, hiển thị thông báo
+                if (friendNames.isEmpty()) {
+                    Toast.makeText(GooglemapActivity.this, "Bạn bè hiện chưa chia sẻ vị trí", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                // Tạo và hiển thị popup menu
+                AlertDialog.Builder builder = new AlertDialog.Builder(GooglemapActivity.this);
+                LayoutInflater inflater = getLayoutInflater();
+                @SuppressLint("ResourceType") View convertView = inflater.inflate(R.menu.popup_friends, null);
+                builder.setView(convertView);
+
+                ListView listView = convertView.findViewById(R.id.listViewFriends);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(GooglemapActivity.this, android.R.layout.simple_list_item_1, friendNames);
+                listView.setAdapter(adapter);
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                // Xử lý sự kiện click vào item trong danh sách
+                listView.setOnItemClickListener((parent, view, position, id) -> {
+                    String selectedFriend = friendNames.get(position);
+                    LatLng friendLatLng = friendsLocations.get(selectedFriend);
+
+                    if (friendLatLng != null) {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(friendLatLng, 15));
+                    }
+                    dialog.dismiss();
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle possible errors
+            }
+        });
+    }
+
 }

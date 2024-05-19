@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "930770812618",
+    "firebase_url": "https://ggmap-a18b3-default-rtdb.firebaseio.com",
+    "project_id": "ggmap-a18b3",
+    "storage_bucket": "ggmap-a18b3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930770812618:android:3a7f21fd5841f0c40f7e33",
+        "android_client_info": {
+          "package_name": "com.example.ggm"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZ6Bi7M3iriPVhij2K1l_fVx7V91qEHSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

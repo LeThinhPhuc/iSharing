@@ -17,4 +17,24 @@
         android:text="Google Map Layout"
         android:layout_centerInParent="true"/>
 
+    <Button
+        android:id="@+id/btn_MoveLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="165dp"
+        android:layout_marginBottom="257dp"
+        android:text="Login" />
+
+    <Button
+        android:id="@+id/btn_MoveRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="163dp"
+        android:layout_marginBottom="170dp"
+        android:text="Register" />
+
 </RelativeLayout>

@@ -17,8 +17,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-1dp"
-        android:layout_marginBottom="4dp" />
+        android:layout_marginEnd="-2dp"
+        android:layout_marginBottom="-2dp" />
 
     <Button
         android:id="@+id/btnCurrentLocation"
@@ -150,6 +150,18 @@
         android:layout_marginRight="4dp"
         android:layout_toEndOf="@id/mapSearch"
         app:srcCompat="@android:drawable/ic_btn_speak_now" />
+
+    <Switch
+        android:id="@+id/swt_shareLocation"
+        android:layout_width="177dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="219dp"
+        android:layout_marginBottom="556dp"
+        android:background="@drawable/bg_search_view"
+        android:text="Stop Sharing"
+        />
 
 
 </RelativeLayout>

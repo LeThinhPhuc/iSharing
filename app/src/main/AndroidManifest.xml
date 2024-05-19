@@ -32,7 +32,9 @@
             android:name=".GooglemapActivity"
             android:label="Google Map Activity">
         </activity>
-
+        <activity android:name=".RegisterActivity"
+            android:label="Register Activity"/>
+        <activity android:name=".LoginActivity"></activity>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCDRQd-XsmNtzp5qWURnuuqo5waY11ow1Q"/>
