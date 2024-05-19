@@ -51,6 +51,7 @@ public class NotificationActivity extends AppCompatActivity {
                 Button buttonAccept = convertView.findViewById(R.id.buttonAccept);
                 Button buttonReject = convertView.findViewById(R.id.buttonReject);
                 Button buttonDeleteNotification = convertView.findViewById(R.id.buttonDelete);
+                TextView textViewStatus = convertView.findViewById(R.id.textViewStatus);
 
                 Notification notification = getItem(position);
                 textViewNotification.setText(notification.message);
@@ -59,13 +60,28 @@ public class NotificationActivity extends AppCompatActivity {
                     buttonAccept.setVisibility(View.VISIBLE);
                     buttonReject.setVisibility(View.VISIBLE);
                     buttonDeleteNotification.setVisibility(View.GONE);
+                    textViewStatus.setVisibility(View.GONE);
 
-                    buttonAccept.setOnClickListener(v -> acceptFriendRequest(notification.friendRequest));
-                    buttonReject.setOnClickListener(v -> rejectFriendRequest(notification.friendRequest));
+                    buttonAccept.setOnClickListener(v -> {
+                        acceptFriendRequest(notification.friendRequest);
+                        buttonAccept.setVisibility(View.GONE);
+                        buttonReject.setVisibility(View.GONE);
+                        textViewStatus.setVisibility(View.VISIBLE);
+                        textViewStatus.setText("Accepted");
+                    });
+
+                    buttonReject.setOnClickListener(v -> {
+                        rejectFriendRequest(notification.friendRequest);
+                        buttonAccept.setVisibility(View.GONE);
+                        buttonReject.setVisibility(View.GONE);
+                        textViewStatus.setVisibility(View.VISIBLE);
+                        textViewStatus.setText("Rejected");
+                    });
                 } else {
                     buttonAccept.setVisibility(View.GONE);
                     buttonReject.setVisibility(View.GONE);
                     buttonDeleteNotification.setVisibility(View.VISIBLE);
+                    textViewStatus.setVisibility(View.GONE);
 
                     buttonDeleteNotification.setOnClickListener(v -> {
                         deleteNotification(notification);
@@ -135,7 +151,6 @@ public class NotificationActivity extends AppCompatActivity {
                 addFriend(friendRequest.receiverId, friendRequest.senderId);
                 sendNotification(friendRequest.senderId, currentUserId + " đã chấp nhận lời mời kết bạn của bạn.");
                 Toast.makeText(this, "Friend request accepted", Toast.LENGTH_SHORT).show();
-                loadNotifications();
             } else {
                 Toast.makeText(this, "Failed to accept friend request", Toast.LENGTH_SHORT).show();
             }
@@ -148,7 +163,6 @@ public class NotificationActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 sendNotification(friendRequest.senderId, currentUserId + " đã từ chối lời mời kết bạn của bạn.");
                 Toast.makeText(this, "Friend request rejected", Toast.LENGTH_SHORT).show();
-                loadNotifications();
             } else {
                 Toast.makeText(this, "Failed to reject friend request", Toast.LENGTH_SHORT).show();
             }
@@ -186,7 +200,7 @@ public class NotificationActivity extends AppCompatActivity {
         public String senderId;
         public String receiverId;
         public String status;
-        public String key; // Thêm trường key để lưu key của nút Firebase
+        public String key;
 
         public FriendRequest() {
             // Default constructor required for calls to DataSnapshot.getValue(FriendRequest.class)
@@ -211,7 +225,7 @@ public class NotificationActivity extends AppCompatActivity {
         public String message;
         public boolean isFriendRequest;
         public FriendRequest friendRequest;
-        private String key; // Thêm trường key để lưu key của nút Firebase
+        private String key;
 
         public Notification() {
             // Default constructor required for calls to DataSnapshot.getValue(Notification.class)
