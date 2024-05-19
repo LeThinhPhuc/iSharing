@@ -1,40 +1,40 @@
+<!-- notification_list_item_with_background.xml -->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
 
+    <!-- Background Image -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/friend"></ImageView>
 
-
-    <!-- Map Fragment -->
-
-    <Button
-        android:id="@+id/button_google_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Google Map Layout"
-        android:layout_centerInParent="true"/>
 
     <Button
         android:id="@+id/btn_MoveLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="152dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="165dp"
-        android:layout_marginBottom="257dp"
+        android:layout_marginEnd="243dp"
+        android:layout_marginBottom="16dp"
         android:text="Login" />
 
     <Button
         android:id="@+id/btn_MoveRegister"
-        android:layout_width="wrap_content"
+        android:layout_width="128dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="163dp"
-        android:layout_marginBottom="170dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginBottom="28dp"
         android:text="Register" />
+    <!-- Các thành phần khác trong phần tử RelativeLayout -->
+    <!-- TextView, Button, và các thành phần khác -->
 
 </RelativeLayout>
+
+
+
+

@@ -48,4 +48,5 @@ dependencies {
     implementation("com.google.android.gms:play-services-location:21.2.0")
     implementation("com.google.android.libraries.places:places:3.4.0")
     implementation ("com.google.firebase:firebase-database:21.0.0")
+    implementation ("com.google.android.material:material:1.12.0")
 }

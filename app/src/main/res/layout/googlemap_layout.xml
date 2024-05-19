@@ -14,11 +14,17 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="1453dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="-2dp"
-        android:layout_marginBottom="-2dp" />
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="40dp" />
+
+
+    <!-- SearchView -->
+
+
+    <!-- HorizontalScrollView to contain buttons -->
 
     <Button
         android:id="@+id/btnCurrentLocation"
@@ -29,10 +35,10 @@
         android:layout_alignParentBottom="true"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="575dp"
-        android:layout_marginEnd="18dp"
+        android:layout_marginTop="337dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginRight="16dp"
-        android:layout_marginBottom="110dp"
+        android:layout_marginBottom="348dp"
         android:background="@drawable/round_button"
         android:drawableRight="@drawable/mylocation"
         android:drawablePadding="4dp"
@@ -40,21 +46,12 @@
         android:textColor="@color/black"
         app:backgroundTint="@null" />
 
-
-    <!-- SearchView -->
-
-
-    <!-- HorizontalScrollView to contain buttons -->
-
     <SearchView
         android:id="@+id/mapSearch"
-        android:layout_width="219dp"
+        android:layout_width="214dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-
         android:layout_marginTop="10dp"
-
-
         android:layout_marginBottom="10dp"
         android:background="@drawable/bg_search_view"
         android:elevation="5dp"
@@ -151,17 +148,50 @@
         android:layout_toEndOf="@id/mapSearch"
         app:srcCompat="@android:drawable/ic_btn_speak_now" />
 
+
     <Switch
         android:id="@+id/swt_shareLocation"
-        android:layout_width="177dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="156dp"
+        android:layout_marginEnd="235dp"
+        android:text="Stop Sharing" />
+
+    <Button
+        android:id="@+id/btn_SearchFriend"
+        android:layout_width="77dp"
+        android:layout_height="30dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="219dp"
-        android:layout_marginBottom="556dp"
-        android:background="@drawable/bg_search_view"
-        android:text="Stop Sharing"
-        />
+        android:layout_marginEnd="158dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/set_searchbutton"
+        android:backgroundTint="@null"
+        android:drawableLeft="@drawable/ic_search" />
 
+    <Button
+        android:id="@+id/btn_Map"
+        android:layout_width="wrap_content"
+        android:layout_height="29dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="282dp"
+        android:layout_marginBottom="-1dp"
+        android:background="@drawable/set_searchbutton"
+        android:backgroundTint="@null"
+        android:drawableLeft="@drawable/ic_my_location" />
 
+    <Button
+        android:id="@+id/btn_Notification"
+        android:layout_width="wrap_content"
+        android:layout_height="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="0dp"
+        android:background="@drawable/set_searchbutton"
+        android:backgroundTint="@null"
+        android:drawableLeft="@drawable/ic_notification" />
 </RelativeLayout>
