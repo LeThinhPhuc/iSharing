@@ -17,7 +17,60 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFriends"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/textViewListFriend" />
+        android:layout_height="625dp"
+        android:layout_below="@id/textViewListFriend"
+        android:background="#FF26E1CF" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
+
+        <!-- Map Button -->
+
+        <!-- Notification Button -->
+        <Button
+            android:id="@+id/btn_Map"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_my_location"
+            android:padding="10dp"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btn_Notification"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_notification"
+            android:text=""
+            android:padding="10dp" />
+
+        <!-- Search Friend Button -->
+        <Button
+            android:id="@+id/btn_SearchFriend"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_search"
+            android:text=""
+            android:padding="10dp" />
+        <Button
+            android:id="@+id/btn_Friend"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/banbe"
+            android:text=""
+            android:padding="10dp" />
+    </LinearLayout>
 
 </RelativeLayout>

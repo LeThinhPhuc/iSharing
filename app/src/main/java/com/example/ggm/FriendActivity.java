@@ -30,11 +30,43 @@ public class FriendActivity extends AppCompatActivity {
     private String currentUserId;
     private ArrayList<String> friendsList;
     private FriendAdapter adapter;
-
+    private Button btn_Map, btn_Notification,btn_SearchFriend,btn_Friend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_friend);
+        btn_Friend=findViewById(R.id.btn_Friend);
+        btn_Map=findViewById(R.id.btn_Map);
+        btn_Notification=findViewById(R.id.btn_Notification);
+        btn_SearchFriend=findViewById(R.id.btn_SearchFriend);
+        btn_Map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendActivity.this, GooglemapActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_Friend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendActivity.this, FriendActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_Notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendActivity.this, NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_SearchFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendActivity.this, SearchFriendActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Get current user ID
         currentUserId = LoginActivity.getUserId(); // You need to replace this with your logic to get the current user ID
