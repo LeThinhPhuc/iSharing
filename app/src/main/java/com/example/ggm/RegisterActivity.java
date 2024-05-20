@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
-    private EditText eDT_userRegister, eDT_passRegister, eDT_conFirmPassWord;
+    private EditText eDT_userRegister, eDT_passRegister, eDT_conFirmPassWord, eDT_PhoneNumber;
     private Button btn_Register;
     private DatabaseReference mDatabase;
 
@@ -38,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         eDT_passRegister = findViewById(R.id.eDT_passRegister);
         eDT_conFirmPassWord = findViewById(R.id.eDT_ConfirmPass);
         btn_Register = findViewById(R.id.btn_Register);
-
+        eDT_PhoneNumber = findViewById(R.id.eDT_PhoneNumber);
         // Ẩn mật khẩu và xác nhận mật khẩu
         eDT_passRegister.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         eDT_conFirmPassWord.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
@@ -49,14 +49,15 @@ public class RegisterActivity extends AppCompatActivity {
                 final String username = eDT_userRegister.getText().toString().trim();
                 final String password = eDT_passRegister.getText().toString().trim();
                 final String confirmPassword = eDT_conFirmPassWord.getText().toString().trim();
+                final String phoneNumber = eDT_PhoneNumber.getText().toString().trim(); // Lấy số điện thoại từ EditText
 
-                if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword)) {
+                if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password) || TextUtils.isEmpty(confirmPassword) || TextUtils.isEmpty(phoneNumber)) {
                     Toast.makeText(RegisterActivity.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
+                // Kiểm tra mật khẩu và xác nhận mật khẩu
                 if (!password.equals(confirmPassword)) {
-                    // Nếu mật khẩu và xác nhận mật khẩu không khớp
                     Toast.makeText(RegisterActivity.this, "Mật khẩu và xác nhận mật khẩu không khớp", Toast.LENGTH_SHORT).show();
                     eDT_passRegister.setText("");
                     eDT_conFirmPassWord.setText("");
@@ -75,6 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                             // Id chưa tồn tại, tiến hành tạo người dùng mới
                             mDatabase.child(userId).child("id").setValue(userId);
                             mDatabase.child(userId).child("password").setValue(password);
+                            mDatabase.child(userId).child("phoneNumber").setValue(phoneNumber); // Lưu số điện thoại vào dữ liệu của người dùng
                             mDatabase.child(userId).child("latitude").setValue(0);
                             mDatabase.child(userId).child("longitude").setValue(0)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -84,7 +86,6 @@ public class RegisterActivity extends AppCompatActivity {
                                                 Toast.makeText(RegisterActivity.this, "Đăng ký thành công", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                                                 startActivity(intent);
-
                                             } else {
                                                 Toast.makeText(RegisterActivity.this, "Lỗi khi đăng ký", Toast.LENGTH_SHORT).show();
                                             }
