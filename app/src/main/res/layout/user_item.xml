@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/textViewUserId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="User ID"
+        android:textSize="18sp" />
+
+    <Button
+        android:id="@+id/buttonAddFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Friend"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/textViewYourFriend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Friend"
+        android:visibility="gone" />
+    <TextView
+        android:id="@+id/tvRequestStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:text="Sent"
+        android:visibility="gone" />
+    <TextView
+        android:id="@+id/textViewNoResults"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/listViewUsers"
+        android:layout_centerHorizontal="true"
+        android:text="Không tìm thấy user"
+        android:visibility="gone"
+        android:textColor="@android:color/holo_red_dark" />
+
+</LinearLayout>

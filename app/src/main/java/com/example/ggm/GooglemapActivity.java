@@ -66,7 +66,7 @@ import java.util.Locale;
 
 public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private Button btnRestaurant, btnHotel, btnFriends, btnDiaHinh, btnCurrentLocation, btnVoice;
+    private Button btnRestaurant, btnHotel, btnFriends, btnDiaHinh, btnCurrentLocation, btnVoice,btn_Notification;
     private final int REQUEST_CODE_GPS_PERMISSION = 1;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location currentLocation;
@@ -77,16 +77,21 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     private ArrayList<String> searchHistoryList = new ArrayList<>();
     private String currentLocationString; // Biến chứa thông tin vị trí hiện tại dưới dạng chuỗi "Latitude,Longitude"
     public String user = LoginActivity.getUserId();
+    private Button btn_Map;
+    private Button btn_SearchFriend;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.googlemap_layout);
         mapSearchView = findViewById(R.id.mapSearch);
         btnDiaHinh = findViewById(R.id.btnDiaHinh);
+        btn_Map=findViewById(R.id.btn_Map);
+        btn_Notification=findViewById(R.id.btn_Notification);
         btnCurrentLocation = findViewById(R.id.btnCurrentLocation);
         btnRestaurant = findViewById(R.id.button2);
         btnHotel = findViewById(R.id.button3);
         btnFriends = findViewById(R.id.button4);
+        btn_SearchFriend=findViewById(R.id.btn_SearchFriend);
         ImageButton btnVoice = findViewById(R.id.btn_voice);
         registerForContextMenu(btnDiaHinh);
         swtShareLocation=findViewById(R.id.swt_shareLocation);
@@ -96,7 +101,27 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = database.getReference("users");
-
+        btn_Map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GooglemapActivity.this, GooglemapActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_Notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GooglemapActivity.this, NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_SearchFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GooglemapActivity.this, SearchFriendActivity.class);
+                startActivity(intent);
+            }
+        });
         // Xử lý sự kiện khi nhấn vào nút "Nhà hàng"
         btnRestaurant.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -2,6 +2,7 @@ package com.example.ggm;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         eDT_User = findViewById(R.id.eDT_User);
         eDT_Pass = findViewById(R.id.eDT_Pass);
         btn_Login = findViewById(R.id.btn_Login);
-
+        eDT_Pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         btn_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

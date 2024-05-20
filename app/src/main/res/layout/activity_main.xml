@@ -1,40 +1,45 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:padding="16dp">
 
-
-
-    <!-- Map Fragment -->
-
-    <Button
-        android:id="@+id/button_google_map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Google Map Layout"
-        android:layout_centerInParent="true"/>
+    <!-- Background Image -->
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/friend"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <Button
         android:id="@+id/btn_MoveLogin"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="165dp"
-        android:layout_marginBottom="257dp"
-        android:text="Login" />
+        android:text="Login"
+        app:layout_constraintEnd_toStartOf="@id/btn_MoveRegister"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintWidth_percent="0.4"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"/>
 
     <Button
         android:id="@+id/btn_MoveRegister"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="163dp"
-        android:layout_marginBottom="170dp"
-        android:text="Register" />
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="Register"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btn_MoveLogin"
+        app:layout_constraintWidth_percent="0.4" />
 
-</RelativeLayout>
+    <!-- Các thành phần khác trong phần tử ConstraintLayout -->
+    <!-- TextView, Button, và các thành phần khác -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

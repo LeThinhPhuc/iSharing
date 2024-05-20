@@ -38,4 +38,15 @@
         android:text="Login"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="408dp"
+        android:layout_height="77dp"
+        android:text="Login"
+        android:textSize="50sp"/> <!-- Đặt kích thước chữ là 50sp -->
+
+        <!-- Thay đổi màu nền thành xanh -->
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
