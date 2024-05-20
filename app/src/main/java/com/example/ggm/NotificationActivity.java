@@ -1,5 +1,7 @@
 package com.example.ggm;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -29,17 +31,58 @@ public class NotificationActivity extends AppCompatActivity {
     private String currentUserId = LoginActivity.getUserId();
     private ArrayList<Notification> notifications;
     private ArrayAdapter<Notification> adapter;
+    private Button btn_Map, btn_Notification,btn_SearchFriend,btn_Friend,btnUser;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.notification);
-
+        btn_Friend=findViewById(R.id.btn_Friend);
+        btn_Map=findViewById(R.id.btn_Map);
+        btn_Notification=findViewById(R.id.btn_Notification);
+        btn_SearchFriend=findViewById(R.id.btn_SearchFriend);
+        btnUser=findViewById(R.id.btn_User);
         listViewNotifications = findViewById(R.id.listViewNotifications);
         friendRequestsRef = FirebaseDatabase.getInstance().getReference().child("friendRequests");
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
         notifications = new ArrayList<>();
+        btnUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotificationActivity.this, UserInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_Map.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotificationActivity.this, GooglemapActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_Friend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotificationActivity.this, FriendActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_Notification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotificationActivity.this, NotificationActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_SearchFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotificationActivity.this, SearchFriendActivity.class);
+                startActivity(intent);
+            }
+        });
         adapter = new ArrayAdapter<Notification>(this, R.layout.notificationitem, R.id.textViewNotification, notifications) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {

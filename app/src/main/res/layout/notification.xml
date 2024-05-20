@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -16,9 +14,73 @@
 
     <ListView
         android:id="@+id/listViewNotifications"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_below="@id/textViewTitle"
+        android:layout_above="@+id/buttonLayout"
+        android:layout_centerHorizontal="true"
+        android:background="#FFCD2A61" />
 
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
 
-</LinearLayout>
+        <Button
+            android:id="@+id/btn_User"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_user"
+            android:text=""
+            android:padding="10dp" />
+        <!-- Map Button -->
+        <Button
+            android:id="@+id/btn_Map"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_my_location"
+            android:padding="10dp"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btn_Notification"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_notification"
+            android:text=""
+            android:padding="10dp" />
+
+        <!-- Search Friend Button -->
+        <Button
+            android:id="@+id/btn_SearchFriend"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_search"
+            android:text=""
+            android:padding="10dp" />
+
+        <Button
+            android:id="@+id/btn_Friend"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/banbe"
+            android:text=""
+            android:padding="10dp" />
+    </LinearLayout>
+
+</RelativeLayout>

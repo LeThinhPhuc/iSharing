@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="593dp"
         android:stackFromBottom="true"
+        android:background="#FF22FFF8"
         android:transcriptMode="alwaysScroll" />
 
     <EditText
@@ -21,10 +22,25 @@
         android:inputType="text" />
 
     <Button
+        android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:onClick="sendMessage"
+        android:background="#FF673AB7"
+        android:backgroundTint="@null"
         android:text="Send" />
+
+    <Button
+        android:id="@+id/buttonCall"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_above="@+id/button5"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="0dp"
+        android:background="#FFCDDC39"
+        android:layout_marginBottom="2dp"
+        android:drawableLeft="@drawable/ic_call" />
+
 </RelativeLayout>
