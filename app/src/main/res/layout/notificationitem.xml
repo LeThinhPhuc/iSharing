@@ -10,6 +10,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:background="#FF2196F3"
         android:text="Notification"
         android:textSize="16sp" />
 
@@ -33,6 +34,7 @@
     <TextView
         android:id="@+id/textViewStatus"
         android:layout_width="wrap_content"
+        android:background="#8BC34A"
         android:layout_height="wrap_content"
         android:text=""
         android:visibility="gone"
