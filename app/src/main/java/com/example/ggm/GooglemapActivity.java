@@ -401,7 +401,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                             R.drawable.yourlocate))));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
 
-                updateUserLocation(currentLocation);
+            updateUserLocation(currentLocation);
 
             mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.getUiSettings().setCompassEnabled(true);
