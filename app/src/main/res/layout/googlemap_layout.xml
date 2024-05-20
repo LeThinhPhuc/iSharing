@@ -6,39 +6,64 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
-
     <!-- Map Fragment -->
+
+    <!-- SearchView -->
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="1453dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="40dp" />
+        android:layout_height="623dp" />
 
+    <SearchView
+        android:id="@+id/mapSearch"
+        android:layout_width="205dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_search_view"
+        android:elevation="5dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="Search..." />
 
-    <!-- SearchView -->
+    <!-- Voice Search Button -->
 
+    <!-- Current Location Button -->
 
-    <!-- HorizontalScrollView to contain buttons -->
+    <!-- Terrain Button -->
+
+    <ImageButton
+        android:id="@+id/btn_voice"
+        android:layout_width="wrap_content"
+        android:layout_height="61dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_toEndOf="@+id/mapSearch"
+        app:srcCompat="@android:drawable/ic_btn_speak_now" />
+
+    <!-- Buttons Container -->
 
     <Button
         android:id="@+id/btnCurrentLocation"
         android:layout_width="70dp"
         android:layout_height="70dp"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/horizontalScrollView2"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="337dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="348dp"
+        android:layout_marginTop="99dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/round_button"
         android:drawableRight="@drawable/mylocation"
         android:drawablePadding="4dp"
@@ -46,37 +71,70 @@
         android:textColor="@color/black"
         app:backgroundTint="@null" />
 
-    <SearchView
-        android:id="@+id/mapSearch"
-        android:layout_width="214dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/bg_search_view"
-        android:elevation="5dp"
-        android:iconifiedByDefault="false"
-        android:queryHint="Search..."
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <Button
         android:id="@+id/btnDiaHinh"
-        android:layout_width="50dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="65dp"
-
+        android:layout_width="56dp"
+        android:layout_height="47dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="7dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="10dp"
-
-        android:layout_marginBottom="10dp"
-        android:layout_toEndOf="@+id/mapSearch"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_toEndOf="@+id/btn_voice"
         android:background="@drawable/button_dia_hinh"
         android:drawableBottom="@drawable/diahinh"
         android:text="Button"
         app:backgroundTint="@null" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="20dp">
+
+        <!-- Map Button -->
+
+        <!-- Notification Button -->
+        <Button
+            android:id="@+id/btn_Map"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_my_location"
+            android:padding="10dp"
+            android:text="" />
+
+        <Button
+            android:id="@+id/btn_Notification"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_notification"
+            android:text=""
+            android:padding="10dp" />
+
+        <!-- Search Friend Button -->
+        <Button
+            android:id="@+id/btn_SearchFriend"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_search"
+            android:text=""
+            android:padding="10dp" />
+    </LinearLayout>
+
+    <!-- Horizontal Scroll View -->
     <HorizontalScrollView
+        android:id="@+id/horizontalScrollView2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/mapSearch"
@@ -85,11 +143,10 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <!-- Custom Buttons -->
-
+            <!-- Restaurant Button -->
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
@@ -101,6 +158,7 @@
                 android:textColor="@color/black"
                 app:backgroundTint="@null" />
 
+            <!-- Hotel Button -->
             <Button
                 android:id="@+id/button3"
                 android:layout_width="wrap_content"
@@ -112,43 +170,32 @@
                 android:textColor="@color/black"
                 app:backgroundTint="@null" />
 
+            <!-- Friends Button -->
             <Button
                 android:id="@+id/button4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/button_background_friends"
                 android:drawableLeft="@drawable/banbe"
                 android:text="Bạn bè"
                 android:textColor="@color/black"
-                android:layout_marginEnd="16dp"
                 app:backgroundTint="@null" />
+
+            <!-- History Button -->
             <Button
                 android:id="@+id/btnOpenSearchHistory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_background_history"
                 android:drawableLeft="@drawable/history"
-                app:backgroundTint="@null"
+                android:text="Lịch sử"
                 android:textColor="@color/black"
-                android:text="Lịch sử"/>
-
+                app:backgroundTint="@null" />
         </LinearLayout>
     </HorizontalScrollView>
 
-    <ImageButton
-        android:id="@+id/btn_voice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="3dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:layout_toEndOf="@id/mapSearch"
-        app:srcCompat="@android:drawable/ic_btn_speak_now" />
-
-
+    <!-- Share Location Switch -->
     <Switch
         android:id="@+id/swt_shareLocation"
         android:layout_width="wrap_content"
@@ -158,40 +205,4 @@
         android:layout_marginTop="156dp"
         android:layout_marginEnd="235dp"
         android:text="Stop Sharing" />
-
-    <Button
-        android:id="@+id/btn_SearchFriend"
-        android:layout_width="77dp"
-        android:layout_height="30dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="158dp"
-        android:layout_marginBottom="0dp"
-        android:background="@drawable/set_searchbutton"
-        android:backgroundTint="@null"
-        android:drawableLeft="@drawable/ic_search" />
-
-    <Button
-        android:id="@+id/btn_Map"
-        android:layout_width="wrap_content"
-        android:layout_height="29dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="282dp"
-        android:layout_marginBottom="-1dp"
-        android:background="@drawable/set_searchbutton"
-        android:backgroundTint="@null"
-        android:drawableLeft="@drawable/ic_my_location" />
-
-    <Button
-        android:id="@+id/btn_Notification"
-        android:layout_width="wrap_content"
-        android:layout_height="28dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="0dp"
-        android:background="@drawable/set_searchbutton"
-        android:backgroundTint="@null"
-        android:drawableLeft="@drawable/ic_notification" />
 </RelativeLayout>

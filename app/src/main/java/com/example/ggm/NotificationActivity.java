@@ -151,6 +151,9 @@ public class NotificationActivity extends AppCompatActivity {
                 addFriend(friendRequest.receiverId, friendRequest.senderId);
                 sendNotification(friendRequest.senderId, currentUserId + " đã chấp nhận lời mời kết bạn của bạn.");
                 Toast.makeText(this, "Friend request accepted", Toast.LENGTH_SHORT).show();
+
+                // Xóa friend request khỏi danh sách notifications
+                deleteFriendRequest(requestId);
             } else {
                 Toast.makeText(this, "Failed to accept friend request", Toast.LENGTH_SHORT).show();
             }
@@ -163,11 +166,25 @@ public class NotificationActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 sendNotification(friendRequest.senderId, currentUserId + " đã từ chối lời mời kết bạn của bạn.");
                 Toast.makeText(this, "Friend request rejected", Toast.LENGTH_SHORT).show();
+
+                // Xóa friend request khỏi danh sách notifications
+                deleteFriendRequest(requestId);
             } else {
                 Toast.makeText(this, "Failed to reject friend request", Toast.LENGTH_SHORT).show();
             }
         });
     }
+    private void deleteFriendRequest(String requestId) {
+        DatabaseReference friendRequestRef = FirebaseDatabase.getInstance().getReference().child("friendRequests").child(requestId);
+        friendRequestRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                Toast.makeText(this, "Friend request deleted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Failed to delete friend request", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
 
     private void addFriend(String userId, String friendId) {
         DatabaseReference userFriendsRef = usersRef.child(userId).child("friends").push();
