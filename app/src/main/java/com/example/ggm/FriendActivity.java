@@ -155,6 +155,7 @@ public class FriendActivity extends AppCompatActivity {
     }
 
     private void deleteFriend(String friendId) {
+        // Remove friend from current user's friend list
         usersRef.child(currentUserId).child("friends").orderByChild("id").equalTo(friendId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -163,11 +164,34 @@ public class FriendActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(FriendActivity.this, "Friend deleted", Toast.LENGTH_SHORT).show();
-                                // Remove friend from the local list
+                                // Remove friend from local list
                                 friendsList.remove(friendId);
                                 // Notify adapter that data set has changed
                                 adapter.notifyDataSetChanged();
+
+                                // Remove current user from friend's friend list
+                                usersRef.child(friendId).child("friends").orderByChild("id").equalTo(currentUserId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                            snapshot.getRef().removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        Toast.makeText(FriendActivity.this, "Friend deleted", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(FriendActivity.this, "Failed to delete friend", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Toast.makeText(FriendActivity.this, "Failed to delete friend: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                });
                             } else {
                                 Toast.makeText(FriendActivity.this, "Failed to delete friend", Toast.LENGTH_SHORT).show();
                             }
