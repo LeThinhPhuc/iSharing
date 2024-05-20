@@ -30,7 +30,15 @@
         android:layout_marginBottom="20dp">
 
         <!-- Map Button -->
-
+        <Button
+            android:id="@+id/btn_User"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/ic_user"
+            android:text=""
+            android:padding="10dp" />
         <!-- Notification Button -->
         <Button
             android:id="@+id/btn_Map"

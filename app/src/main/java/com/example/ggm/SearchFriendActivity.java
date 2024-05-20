@@ -30,7 +30,7 @@ public class SearchFriendActivity extends AppCompatActivity {
     private String currentUserId = LoginActivity.getUserId(); // Giả sử người dùng hiện tại là user1
     private ArrayList<String> userIds;
     private ArrayAdapter<String> adapter;
-    private Button btn_Map, btn_Notification,btn_SearchFriend,btn_Friend;
+    private Button btn_Map, btn_Notification,btn_SearchFriend,btn_Friend,btnUser;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -38,7 +38,7 @@ public class SearchFriendActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_friend);
         setContentView(R.layout.search_friend);
-
+        btnUser=findViewById(R.id.btn_User);
         // Ánh xạ các button tại đây
         btn_Friend=findViewById(R.id.btn_Friend);
         btn_Map=findViewById(R.id.btn_Map);
@@ -52,7 +52,13 @@ public class SearchFriendActivity extends AppCompatActivity {
         userIds = new ArrayList<>();
         adapter = new ArrayAdapter<>(this, R.layout.user_item, R.id.textViewUserId, userIds);
         listViewUsers.setAdapter(adapter);
-
+        btnUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(SearchFriendActivity.this, UserInfoActivity.class);
+                startActivity(intent);
+            }
+        });
         btn_Map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

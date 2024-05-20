@@ -31,7 +31,7 @@ public class NotificationActivity extends AppCompatActivity {
     private String currentUserId = LoginActivity.getUserId();
     private ArrayList<Notification> notifications;
     private ArrayAdapter<Notification> adapter;
-    private Button btn_Map, btn_Notification,btn_SearchFriend,btn_Friend;
+    private Button btn_Map, btn_Notification,btn_SearchFriend,btn_Friend,btnUser;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -42,11 +42,19 @@ public class NotificationActivity extends AppCompatActivity {
         btn_Map=findViewById(R.id.btn_Map);
         btn_Notification=findViewById(R.id.btn_Notification);
         btn_SearchFriend=findViewById(R.id.btn_SearchFriend);
+        btnUser=findViewById(R.id.btn_User);
         listViewNotifications = findViewById(R.id.listViewNotifications);
         friendRequestsRef = FirebaseDatabase.getInstance().getReference().child("friendRequests");
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
 
         notifications = new ArrayList<>();
+        btnUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(NotificationActivity.this, UserInfoActivity.class);
+                startActivity(intent);
+            }
+        });
         btn_Map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

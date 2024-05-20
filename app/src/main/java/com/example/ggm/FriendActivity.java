@@ -30,7 +30,7 @@ public class FriendActivity extends AppCompatActivity {
     private String currentUserId;
     private ArrayList<String> friendsList;
     private FriendAdapter adapter;
-    private Button btn_Map, btn_Notification,btn_SearchFriend,btn_Friend;
+    private Button btn_Map, btn_Notification,btn_SearchFriend,btn_Friend,btnUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +39,8 @@ public class FriendActivity extends AppCompatActivity {
         btn_Map=findViewById(R.id.btn_Map);
         btn_Notification=findViewById(R.id.btn_Notification);
         btn_SearchFriend=findViewById(R.id.btn_SearchFriend);
+        btnUser=findViewById(R.id.btn_User);
+
         btn_Map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -64,6 +66,13 @@ public class FriendActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(FriendActivity.this, SearchFriendActivity.class);
+                startActivity(intent);
+            }
+        });
+        btnUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(FriendActivity.this, UserInfoActivity.class);
                 startActivity(intent);
             }
         });

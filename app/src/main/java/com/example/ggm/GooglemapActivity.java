@@ -66,7 +66,7 @@ import java.util.Locale;
 
 public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private Button btnRestaurant, btnHotel, btnFriends, btnDiaHinh,btnFriend, btnCurrentLocation, btnVoice,btn_Notification;
+    private Button btnRestaurant, btnHotel, btnFriends, btnDiaHinh,btnFriend, btnCurrentLocation, btnVoice,btn_Notification,btnUser;
     private final int REQUEST_CODE_GPS_PERMISSION = 1;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location currentLocation;
@@ -93,6 +93,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         btnFriend=findViewById(R.id.btn_Friend);
         btnHotel = findViewById(R.id.button3);
         btnFriends = findViewById(R.id.button4);
+        btnUser=findViewById(R.id.btn_User);
         btn_SearchFriend=findViewById(R.id.btn_SearchFriend);
         ImageButton btnVoice = findViewById(R.id.btn_voice);
         registerForContextMenu(btnDiaHinh);
@@ -103,6 +104,13 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = database.getReference("users");
+        btnUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GooglemapActivity.this, UserInfoActivity.class);
+                startActivity(intent);
+            }
+        });
         btn_Map.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

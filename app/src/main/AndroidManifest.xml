@@ -48,6 +48,10 @@
             android:label="Chat Activity">
 
         </activity>
+        <activity android:name=".UserInfoActivity"
+            android:label="User Activity">
+
+        </activity>
         <activity
             android:name=".NotificationActivity"
             android:label="Notification Activity">
