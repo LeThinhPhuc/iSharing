@@ -220,6 +220,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="156dp"
+        android:background="#FF4CAF50"
         android:layout_marginEnd="235dp"
         android:text="Stop Sharing" />
 </RelativeLayout>

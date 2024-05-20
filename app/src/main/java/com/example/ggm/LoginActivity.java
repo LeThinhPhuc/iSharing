@@ -25,11 +25,13 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_Login, btn_Register;
     private DatabaseReference mDatabase;
     private static String userId; // Khai báo userId là static
+    private static int login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+        login=0;
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
 
@@ -81,5 +83,13 @@ public class LoginActivity extends AppCompatActivity {
     // Phương thức static để truy cập userId từ một lớp khác
     public static String getUserId() {
         return userId;
+    }
+
+    public static void incrementLogin() {
+        login++;
+    }
+
+    public static int getLogin() {
+        return login;
     }
 }

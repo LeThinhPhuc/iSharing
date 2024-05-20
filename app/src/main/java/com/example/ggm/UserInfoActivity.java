@@ -28,7 +28,7 @@ public class UserInfoActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_info_layout);
-
+        LoginActivity.incrementLogin();
         // Initialize views
         TextView textViewTitle = findViewById(R.id.textViewTitle);
         editTextId = findViewById(R.id.editTextId);

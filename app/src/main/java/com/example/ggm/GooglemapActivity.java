@@ -97,13 +97,16 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         btn_SearchFriend=findViewById(R.id.btn_SearchFriend);
         ImageButton btnVoice = findViewById(R.id.btn_voice);
         registerForContextMenu(btnDiaHinh);
+
         swtShareLocation=findViewById(R.id.swt_shareLocation);
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLastLocation();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = database.getReference("users");
+        LoginActivity.incrementLogin();
         btnUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -271,6 +274,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     // Switch is enabled - update user location to current location
+
                     if (currentLocation != null) {
                         updateUserLocationToZero();
                         buttonView.setBackgroundColor(getResources().getColor(com.google.android.libraries.places.R.color.quantum_googred));
@@ -278,8 +282,10 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                     }
                 } else {
                     // Switch is disabled - update user location to 0,0
-                    updateUserLocation(currentLocation);
-                    buttonView.setBackgroundColor(getResources().getColor(com.google.android.libraries.places.R.color.quantum_googgreen));
+                    if (currentLocation != null) {
+                        updateUserLocation(currentLocation);
+                        buttonView.setBackgroundColor(getResources().getColor(com.google.android.libraries.places.R.color.quantum_googgreen));
+                    }
                 }
             }
         });
@@ -394,7 +400,9 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
                             getApplicationContext(),
                             R.drawable.yourlocate))));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 15));
-            updateUserLocation(currentLocation);
+
+                updateUserLocation(currentLocation);
+
             mMap.getUiSettings().setZoomControlsEnabled(true);
             mMap.getUiSettings().setCompassEnabled(true);
         }

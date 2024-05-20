@@ -34,6 +34,7 @@ public class FriendActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LoginActivity.incrementLogin();
         setContentView(R.layout.activity_friend);
         btn_Friend=findViewById(R.id.btn_Friend);
         btn_Map=findViewById(R.id.btn_Map);
