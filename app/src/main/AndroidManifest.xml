@@ -33,6 +33,14 @@
             android:name=".GooglemapActivity"
             android:label="Google Map Activity">
         </activity>
+        <activity android:name=".FriendActivity"
+            android:label="Friend Activity">
+
+        </activity>
+        <activity android:name=".ChatActivity"
+            android:label="Chat Activity">
+
+        </activity>
         <activity
             android:name=".NotificationActivity"
             android:label="Notification Activity">

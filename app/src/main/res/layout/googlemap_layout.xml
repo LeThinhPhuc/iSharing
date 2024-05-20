@@ -130,6 +130,15 @@
             android:drawableTop="@drawable/ic_search"
             android:text=""
             android:padding="10dp" />
+        <Button
+            android:id="@+id/btn_Friend"
+            android:layout_width="67dp"
+            android:layout_height="58dp"
+            android:background="@drawable/set_searchbutton"
+            android:backgroundTint="@null"
+            android:drawableTop="@drawable/banbe"
+            android:text=""
+            android:padding="10dp" />
     </LinearLayout>
 
     <!-- Horizontal Scroll View -->

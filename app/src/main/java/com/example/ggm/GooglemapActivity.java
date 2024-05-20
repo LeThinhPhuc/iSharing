@@ -66,7 +66,7 @@ import java.util.Locale;
 
 public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private GoogleMap mMap;
-    private Button btnRestaurant, btnHotel, btnFriends, btnDiaHinh, btnCurrentLocation, btnVoice,btn_Notification;
+    private Button btnRestaurant, btnHotel, btnFriends, btnDiaHinh,btnFriend, btnCurrentLocation, btnVoice,btn_Notification;
     private final int REQUEST_CODE_GPS_PERMISSION = 1;
     private FusedLocationProviderClient mFusedLocationClient;
     private Location currentLocation;
@@ -79,6 +79,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
     public String user = LoginActivity.getUserId();
     private Button btn_Map;
     private Button btn_SearchFriend;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +90,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         btn_Notification=findViewById(R.id.btn_Notification);
         btnCurrentLocation = findViewById(R.id.btnCurrentLocation);
         btnRestaurant = findViewById(R.id.button2);
+        btnFriend=findViewById(R.id.btn_Friend);
         btnHotel = findViewById(R.id.button3);
         btnFriends = findViewById(R.id.button4);
         btn_SearchFriend=findViewById(R.id.btn_SearchFriend);
@@ -105,6 +107,13 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GooglemapActivity.this, GooglemapActivity.class);
+                startActivity(intent);
+            }
+        });
+        btnFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GooglemapActivity.this, FriendActivity.class);
                 startActivity(intent);
             }
         });
