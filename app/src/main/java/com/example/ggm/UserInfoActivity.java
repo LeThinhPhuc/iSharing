@@ -1,5 +1,7 @@
 package com.example.ggm;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -19,25 +21,28 @@ import com.google.firebase.database.ValueEventListener;
 
 public class UserInfoActivity extends AppCompatActivity {
 
-    private EditText editTextId, editTextPassword, editTextPhoneNumber;
-    private Button buttonUpdate;
+    private EditText editTextPassword, editTextPhoneNumber;
+    private TextView textViewId;
+    private Button buttonUpdate, btn_Logout, btn_Back;
     private DatabaseReference usersRef;
     private String userId;
-    private String  user=LoginActivity.getUserId();
+    private String user = LoginActivity.getUserId();
+
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_info_layout);
 
-        // Initialize views
-        TextView textViewTitle = findViewById(R.id.textViewTitle);
-        editTextId = findViewById(R.id.editTextId);
+        btn_Back = findViewById(R.id.buttonBack);
+        textViewId = findViewById(R.id.textViewId);
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextPhoneNumber = findViewById(R.id.editTextPhoneNumber);
         buttonUpdate = findViewById(R.id.buttonUpdate);
+        btn_Logout = findViewById(R.id.buttonLogout);
 
         // Set title
-        textViewTitle.setText("Thông tin người dùng");
+        textViewId.setText("Thông tin người dùng");
 
         // Initialize Firebase
         usersRef = FirebaseDatabase.getInstance().getReference().child("users");
@@ -47,6 +52,22 @@ public class UserInfoActivity extends AppCompatActivity {
 
         // Load user info
         loadUserInfo();
+
+        btn_Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserInfoActivity.this, GooglemapActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btn_Logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(UserInfoActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // Set click listener for update button
         buttonUpdate.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +88,7 @@ public class UserInfoActivity extends AppCompatActivity {
                     String phoneNumber = dataSnapshot.child("phoneNumber").getValue(String.class);
 
                     // Set loaded info to EditTexts
-                    editTextId.setText(id);
+                    textViewId.setText(id);
                     editTextPassword.setText(password);
                     editTextPhoneNumber.setText(phoneNumber);
                 }
@@ -81,18 +102,16 @@ public class UserInfoActivity extends AppCompatActivity {
     }
 
     private void updateUserInfo() {
-        final String id = editTextId.getText().toString().trim();
         final String password = editTextPassword.getText().toString().trim();
         final String phoneNumber = editTextPhoneNumber.getText().toString().trim();
 
         // Check if any field is empty
-        if (TextUtils.isEmpty(id) || TextUtils.isEmpty(password) || TextUtils.isEmpty(phoneNumber)) {
+        if (TextUtils.isEmpty(password) || TextUtils.isEmpty(phoneNumber)) {
             Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Update user info in Firebase
-        usersRef.child(userId).child("id").setValue(id);
         usersRef.child(userId).child("password").setValue(password);
         usersRef.child(userId).child("phoneNumber").setValue(phoneNumber);
         Toast.makeText(UserInfoActivity.this, "User info updated successfully", Toast.LENGTH_SHORT).show();

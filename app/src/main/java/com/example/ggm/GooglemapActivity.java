@@ -104,6 +104,7 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
         mapFragment.getMapAsync(this);
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference usersRef = database.getReference("users");
+        checkAndUpdateUserLocation();
         btnUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -797,6 +798,55 @@ public class GooglemapActivity extends AppCompatActivity implements OnMapReadyCa
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Handle possible errors
+            }
+        });
+    }
+    private void checkAndUpdateUserLocation() {
+        String userId = user; // Giả sử user là biến chứa ID người dùng hiện tại
+
+        // Tham chiếu đến người dùng hiện tại
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference().child("users").child(userId);
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    Double latitude = dataSnapshot.child("latitude").getValue(Double.class);
+                    Double longitude = dataSnapshot.child("longitude").getValue(Double.class);
+
+                    // Kiểm tra nếu một trong hai tọa độ bằng 0
+                    if (latitude != 0 && longitude !=0 ) {
+                        // Cập nhật vị trí người dùng hiện tại về 0
+
+
+                        // Cập nhật vị trí cho các bạn bè có ID giống với userId
+                        DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users");
+                        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot usersSnapshot) {
+                                for (DataSnapshot userSnapshot : usersSnapshot.getChildren()) {
+                                    String friendUserId = userSnapshot.getKey();
+                                    for (DataSnapshot friendSnapshot : userSnapshot.child("friends").getChildren()) {
+                                        String friendId = friendSnapshot.child("id").getValue(String.class);
+                                        if (userId.equals(friendId)) {
+                                            userSnapshot.getRef().child("friends").child(friendSnapshot.getKey()).child("latitude").setValue(0);
+                                            userSnapshot.getRef().child("friends").child(friendSnapshot.getKey()).child("longitude").setValue(0);
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Xử lý lỗi nếu có
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Xử lý lỗi nếu có
             }
         });
     }

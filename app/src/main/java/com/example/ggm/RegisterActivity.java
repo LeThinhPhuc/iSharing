@@ -23,7 +23,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class RegisterActivity extends AppCompatActivity {
     private EditText eDT_userRegister, eDT_passRegister, eDT_conFirmPassWord, eDT_PhoneNumber;
-    private Button btn_Register;
+    private Button btn_Register,btn_Login,btn_Back;
     private DatabaseReference mDatabase;
 
     @SuppressLint("MissingInflatedId")
@@ -33,7 +33,8 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.register);
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
-
+        btn_Login=findViewById(R.id.btn_Login);
+        btn_Back=findViewById(R.id.btn_Back);
         eDT_userRegister = findViewById(R.id.eDT_userRegister);
         eDT_passRegister = findViewById(R.id.eDT_passRegister);
         eDT_conFirmPassWord = findViewById(R.id.eDT_ConfirmPass);
@@ -42,7 +43,21 @@ public class RegisterActivity extends AppCompatActivity {
         // Ẩn mật khẩu và xác nhận mật khẩu
         eDT_passRegister.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
         eDT_conFirmPassWord.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        btn_Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_Login.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
         btn_Register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,5 +1,6 @@
 package com.example.ggm;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -25,18 +26,36 @@ public class LoginActivity extends AppCompatActivity {
     private Button btn_Login, btn_Register;
     private DatabaseReference mDatabase;
     private static String userId; // Khai báo userId là static
-
+    private Button btn_Back;
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
+
 
         mDatabase = FirebaseDatabase.getInstance().getReference().child("users");
 
         eDT_User = findViewById(R.id.eDT_User);
         eDT_Pass = findViewById(R.id.eDT_Pass);
         btn_Login = findViewById(R.id.btn_Login);
+        btn_Register=findViewById(R.id.btn_Register);
+        btn_Back=findViewById(R.id.btn_Back);
         eDT_Pass.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        btn_Register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+        btn_Back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
         btn_Login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
