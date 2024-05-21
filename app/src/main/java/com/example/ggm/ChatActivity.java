@@ -7,16 +7,19 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.ChildEventListener;
@@ -25,9 +28,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
 public class ChatActivity extends AppCompatActivity {
 
     private DatabaseReference messagesRef;
@@ -39,13 +45,14 @@ public class ChatActivity extends AppCompatActivity {
     private String currentUserId;
     private String friendId;
     private Button btn_Call;
-
+    private TextToSpeech tts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        btn_Call=findViewById(R.id.buttonCall);
+
+        btn_Call = findViewById(R.id.buttonCall);
 
         // Get user IDs from intent
         currentUserId = getIntent().getStringExtra("currentUserId");
@@ -58,18 +65,34 @@ public class ChatActivity extends AppCompatActivity {
         editTextMessage = findViewById(R.id.editTextMessage);
         listViewMessages = findViewById(R.id.listViewMessages);
 
+        // Initialize Text-to-Speech
+        tts = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    tts.setLanguage(Locale.getDefault());
+                }
+            }
+        });
+
         // Initialize messages list
         messagesList = new ArrayList<>();
 
         // Initialize adapter
-        adapter = new MessageAdapter(this, messagesList);
+        adapter = new MessageAdapter(this, messagesList, tts);
         listViewMessages.setAdapter(adapter);
+
+        // Load messages
+        loadMessages();
+
+        // Set button call listener
         btn_Call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 callFriend();
             }
         });
+
         // Set click listener for each item in the list view
         listViewMessages.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -80,9 +103,16 @@ public class ChatActivity extends AppCompatActivity {
                 showDeleteMessageDialog(clickedMessage.getMessageId());
             }
         });
+    }
 
-        // Load messages
-        loadMessages();
+    @Override
+    protected void onDestroy() {
+        // Release resources of Text-to-Speech when the activity is destroyed
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
+        super.onDestroy();
     }
 
     // Load messages only once
@@ -173,6 +203,7 @@ public class ChatActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     private void callFriend() {
         // Kiểm tra xem người nhận có số điện thoại không
         DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference().child("users").child(friendId);
@@ -208,5 +239,4 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
-
 }
