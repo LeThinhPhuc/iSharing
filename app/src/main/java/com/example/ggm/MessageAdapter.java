@@ -37,7 +37,7 @@ public class MessageAdapter extends ArrayAdapter<Message> {
 
         Message message = messagesList.get(position);
 
-        textViewSender.setText(message.getSenderId());
+        textViewSender.setText(message.getMessageId());
         textViewText.setText(message.getReceiverId());
 
         btnSpeak.setOnClickListener(new View.OnClickListener() {
